@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Самрат Байхонов](https://up.htmlacademy.ru/javascript/19/user/700389).
-* Наставник: `Неизвестно`.
+* Наставник: [Антон Попов](https://up.htmlacademy.ru/javascript/19/user/78239).
 
 ---
 
