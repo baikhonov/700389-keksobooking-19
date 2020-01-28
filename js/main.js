@@ -3,6 +3,11 @@
 var PIN_OFFSET_X = 25;
 var PIN_OFFSET_Y = 70;
 
+/**
+ * Создаёт массив указанной длины, заполняя его цифрами от 1
+ * @param {*} length - длина массива
+ * @return {Array} возвращает массив, заполненный цифрами от 1
+ */
 var generateArrayWithFixedLength = function (length) {
   var arr = [];
   for (var i = 1; i <= length; i++) {
