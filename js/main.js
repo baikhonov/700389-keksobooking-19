@@ -183,10 +183,13 @@ var renderCard = function (card) {
   cardElement.querySelector('.popup__type').textContent = TYPES_OF_HOUSE_RUSSIAN[card.offer.type];
   cardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + COUNT_ROOMS[card.offer.rooms] + ' для ' + card.offer.guests + COUNT_GUESTS[card.offer.guests];
   cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
+  // получаем список фич в разметке, зачищаем
   var popupFeatures = cardElement.querySelector('.popup__features');
   while (popupFeatures.firstChild) {
     popupFeatures.removeChild(popupFeatures.firstChild);
   }
+  // если в объявлении есть фичи, добавляем их в зачищенный список,
+  // иначе удаляем его из разметки
   if (card.offer.features.length) {
     card.offer.features.forEach(function (feature) {
       var popupFeature = document.createElement('li');
@@ -198,10 +201,13 @@ var renderCard = function (card) {
     cardElement.removeChild(popupFeatures);
   }
   cardElement.querySelector('.popup__description').textContent = card.offer.description;
+  // получаем список фотографий в разметке, зачищаем
   var popupPhotos = cardElement.querySelector('.popup__photos');
   while (popupPhotos.firstChild) {
     popupPhotos.removeChild(popupPhotos.firstChild);
   }
+  // если в объявлении есть фотографии, добавляем их в зачищенный список,
+  // иначе удаляем его из разметки
   if (card.offer.photos.length) {
     card.offer.photos.forEach(function (photo) {
       var popupPhoto = document.createElement('img');
@@ -209,7 +215,6 @@ var renderCard = function (card) {
       popupPhoto.width = 45;
       popupPhoto.height = 40;
       popupPhoto.src = photo;
-      // popupPhotos.insertAdjacentElement('beforeend', popupPhoto);
       popupPhotos.appendChild(popupPhoto);
     });
   } else {
