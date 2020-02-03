@@ -388,10 +388,11 @@ var selectTimeOutValidateHandler = function () {
 timeInSelect.addEventListener('change', selectTimeInValidateHandler);
 timeOutSelect.addEventListener('change', selectTimeOutValidateHandler);
 
+var numberAd;
+var mapCard;
+
 var mapClickHandler = function (evt) {
   if ((evt.target.matches('button.map__pin img') || evt.target.matches('button.map__pin')) && (!evt.target.matches('button.map__pin--main img') && !evt.target.matches('button.map__pin--main'))) {
-    var numberAd;
-    var mapCard;
     if (evt.target.matches('button.map__pin img')) {
       numberAd = evt.target.src[evt.target.src.length - 5];
     } else {
@@ -414,3 +415,12 @@ var mapClickHandler = function (evt) {
 };
 
 map.addEventListener('click', mapClickHandler);
+
+var mapKeydownHandler = function (evt) {
+  if (map.querySelector('.map__card') && evt.key === 'Escape') {
+    mapCard = map.querySelector('.map__card ');
+    map.removeChild(mapCard);
+  }
+};
+
+map.addEventListener('keydown', mapKeydownHandler);
