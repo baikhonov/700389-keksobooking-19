@@ -8,7 +8,7 @@
 
   mapPinMain.addEventListener('mousedown', function (evt) {
     if (evt.button === 0) {
-      window.main.pageActivateHandler();
+      window.app.pageActivateHandler();
     }
   });
 

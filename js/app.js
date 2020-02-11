@@ -44,7 +44,7 @@
     adFormAddress.value = (window.data.PinMain.X_INITIAL + window.data.PinMain.OFFSET_X) + ', ' + (window.data.PinMain.Y_INITIAL + window.data.PinMain.OFFSET_Y);
   };
 
-  window.main = {
+  window.app = {
     map: map,
     pageActivateHandler: pageActivateHandler,
   };

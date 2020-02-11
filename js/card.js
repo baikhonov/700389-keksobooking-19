@@ -65,12 +65,12 @@
     }
     var cardElementClose = cardElement.querySelector('.popup__close');
     cardElementClose.addEventListener('click', function () {
-      window.main.map.removeChild(cardElement);
+      window.app.map.removeChild(cardElement);
     });
     var mapKeydownHandler = function (evt) {
-      if (window.main.map.querySelector('.map__card') && evt.key === 'Escape') {
-        var mapCard = window.main.map.querySelector('.map__card');
-        window.main.map.removeChild(mapCard);
+      if (window.app.map.querySelector('.map__card') && evt.key === 'Escape') {
+        var mapCard = window.app.map.querySelector('.map__card');
+        window.app.map.removeChild(mapCard);
         document.removeEventListener('keydown', mapKeydownHandler);
       }
     };
