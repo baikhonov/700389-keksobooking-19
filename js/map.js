@@ -12,14 +12,12 @@
     }
   });
 
-  // проверить, не избыточно ли, может достаточно mousedown handler?
   mapPinMain.addEventListener('keydown', function (evt) {
     if (evt.key === 'Enter') {
       window.main.pageActivateHandler();
     }
   });
 
-  // отрефакторить!
   var mapClickHandler = function (evt) {
     var mapCard;
     if ((evt.target.matches('button.map__pin img') || evt.target.matches('button.map__pin')) && (!evt.target.matches('button.map__pin--main img') && !evt.target.matches('button.map__pin--main'))) {

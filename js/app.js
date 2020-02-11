@@ -24,6 +24,7 @@
     });
     adFormAddress.setAttribute('readonly', 'readonly');
     adFormAddress.value = (window.data.PinMain.X_INITIAL + window.data.PinMain.OFFSET_X) + ', ' + (window.data.PinMain.Y_INITIAL + window.data.PinMain.OFFSET_Y_INITIAL);
+    window.form.capacityNumber[2].selected = true;
   };
 
   deactivatePage();

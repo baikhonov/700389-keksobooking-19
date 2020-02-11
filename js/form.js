@@ -22,9 +22,6 @@
     }
   };
 
-  // убрать вызов, подкорректировать поля при инициализации страницы
-  selectsRoomCapacityValidateHandler();
-
   roomNumber.addEventListener('change', selectsRoomCapacityValidateHandler);
   capacityNumber.addEventListener('change', selectsRoomCapacityValidateHandler);
 
@@ -54,24 +51,25 @@
     }
   };
 
-  // убрать вызов, подкорректировать поля при инициализации страницы
-  selectTypeOfHouseValidateHandler();
-
   typeOfHouse.addEventListener('change', selectTypeOfHouseValidateHandler);
 
   var timeInSelect = adForm.querySelector('#timein');
   var timeOutSelect = adForm.querySelector('#timeout');
 
-  // подумать, как объединить хендлеры
-  var selectTimeInValidateHandler = function () {
-    timeOutSelect.selectedIndex = timeInSelect.selectedIndex;
+  var selectTimeValidateHandler = function (evt) {
+    if (evt.target.matches('#timein')) {
+      timeOutSelect.selectedIndex = timeInSelect.selectedIndex;
+
+    } else {
+      timeInSelect.selectedIndex = timeOutSelect.selectedIndex;
+    }
   };
 
-  var selectTimeOutValidateHandler = function () {
-    timeInSelect.selectedIndex = timeOutSelect.selectedIndex;
-  };
+  timeInSelect.addEventListener('change', selectTimeValidateHandler);
+  timeOutSelect.addEventListener('change', selectTimeValidateHandler);
 
-  timeInSelect.addEventListener('change', selectTimeInValidateHandler);
-  timeOutSelect.addEventListener('change', selectTimeOutValidateHandler);
+  window.form = {
+    capacityNumber: capacityNumber,
+  };
 
 })();
