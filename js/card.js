@@ -2,6 +2,12 @@
 
 (function () {
 
+  var TYPES_OF_HOUSE = {
+    'palace': 'Дворец',
+    'flat': 'Квартира',
+    'house': 'Дом',
+    'bungalo': 'Бунгало',
+  };
   var ROOMS_FORMS = [
     'комната',
     'комнаты',
@@ -12,6 +18,7 @@
     'гостей',
     'гостей',
   ];
+  var map = document.querySelector('.map');
 
   var cardTemplate = document.querySelector('#card')
     .content.
@@ -28,8 +35,8 @@
     cardElement.querySelector('.popup__title').textContent = card.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = card.offer.address;
     cardElement.querySelector('.popup__text--price span').textContent = card.offer.price;
-    cardElement.querySelector('.popup__type').textContent = window.data.TYPES_OF_HOUSE[card.offer.type];
-    cardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' ' + window.data.getPluralForm(ROOMS_FORMS, card.offer.rooms) + ' для ' + card.offer.guests + ' ' + window.data.getPluralForm(GUESTS_FORMS, card.offer.guests);
+    cardElement.querySelector('.popup__type').textContent = TYPES_OF_HOUSE[card.offer.type];
+    cardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' ' + window.util.getPluralForm(ROOMS_FORMS, card.offer.rooms) + ' для ' + card.offer.guests + ' ' + window.util.getPluralForm(GUESTS_FORMS, card.offer.guests);
     cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
     // получаем список фич в разметке, готовим шаблон фичи, зачищаем список
     var popupFeatures = cardElement.querySelector('.popup__features');
@@ -65,12 +72,12 @@
     }
     var cardElementClose = cardElement.querySelector('.popup__close');
     cardElementClose.addEventListener('click', function () {
-      window.app.map.removeChild(cardElement);
+      map.removeChild(cardElement);
     });
     var mapKeydownHandler = function (evt) {
-      if (window.app.map.querySelector('.map__card') && evt.key === 'Escape') {
-        var mapCard = window.app.map.querySelector('.map__card');
-        window.app.map.removeChild(mapCard);
+      if (map.querySelector('.map__card') && evt.key === 'Escape') {
+        var mapCard = map.querySelector('.map__card');
+        map.removeChild(mapCard);
         document.removeEventListener('keydown', mapKeydownHandler);
       }
     };
@@ -80,7 +87,7 @@
   };
 
   window.card = {
-    renderCard: renderCard,
+    render: renderCard,
   };
 
 })();
