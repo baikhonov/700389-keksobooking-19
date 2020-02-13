@@ -65,23 +65,26 @@
         y: moveEvt.clientY,
       };
 
-      if (moveEvt.clientX > (MapLimits.X_END + PinMain.OFFSET_X)) {
+      var deltaX = mapPinMain.offsetLeft - shift.x;
+      mapPinMain.style.left = deltaX + 'px';
+      if (deltaX > (MapLimits.X_END - PinMain.OFFSET_X)) {
         mapPinMain.style.left = (MapLimits.X_END - PinMain.OFFSET_X) + 'px';
-      } else if (moveEvt.clientX < MapLimits.X_START) {
+      }
+      if (deltaX < (MapLimits.X_START - PinMain.OFFSET_X)) {
         mapPinMain.style.left = (MapLimits.X_START - PinMain.OFFSET_X) + 'px';
-      } else {
-        mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
       }
 
-      if (moveEvt.clientY > (MapLimits.Y_END - PinMain.OFFSET_Y)) {
-        mapPinMain.style.top = MapLimits.Y_END + 'px';
-      } else if (moveEvt.clientY < (MapLimits.Y_START - PinMain.OFFSET_Y)) {
+      var deltaY = mapPinMain.offsetTop - shift.y;
+      mapPinMain.style.top = deltaY + 'px';
+      if (deltaY > (MapLimits.Y_END - PinMain.OFFSET_Y)) {
+        mapPinMain.style.top = (MapLimits.Y_END - PinMain.OFFSET_Y) + 'px';
+      }
+      if (deltaY < (MapLimits.Y_START - PinMain.OFFSET_Y)) {
         mapPinMain.style.top = (MapLimits.Y_START - PinMain.OFFSET_Y) + 'px';
-      } else {
-        mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
       }
 
       adFormAddressChange();
+
     };
 
     var mouseUpHandler = function (upEvt) {
