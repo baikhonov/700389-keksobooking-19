@@ -2,6 +2,12 @@
 
 (function () {
 
+  var MapLimits = {
+    X_START: 0,
+    X_END: 1200,
+    Y_START: 130,
+    Y_END: 630,
+  };
   var Pin = {
     OFFSET_X: 25,
     OFFSET_Y: 70,
@@ -19,6 +25,7 @@
   var mapPins = map.querySelector('.map__pins');
   var mapPinMain = map.querySelector('.map__pin--main');
   var mapFiltersContainer = map.querySelector('.map__filters-container');
+  var adFormAddress = document.querySelector('.ad-form #address');
 
   var mapShowPins = function () {
     var fragment = document.createDocumentFragment();
@@ -28,15 +35,70 @@
     mapPins.appendChild(fragment);
   };
 
+  var isPageActivated = false;
+
+  var adFormAddressChange = function () {
+    adFormAddress.value = (parseInt(mapPinMain.style.left.slice(0, -2), 10) + PinMain.OFFSET_X) + ', ' + (parseInt(mapPinMain.style.top.slice(0, -2), 10) + PinMain.OFFSET_Y);
+  };
+
   mapPinMain.addEventListener('mousedown', function (evt) {
-    if (evt.button === 0) {
+    if (evt.button === 0 && !isPageActivated) {
       window.main.pageActivateHandler();
+      isPageActivated = true;
     }
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY,
+    };
+
+    var mouseMoveHandler = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY,
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY,
+      };
+
+      if (moveEvt.clientX > (MapLimits.X_END + PinMain.OFFSET_X)) {
+        mapPinMain.style.left = (MapLimits.X_END - PinMain.OFFSET_X) + 'px';
+      } else if (moveEvt.clientX < MapLimits.X_START) {
+        mapPinMain.style.left = (MapLimits.X_START - PinMain.OFFSET_X) + 'px';
+      } else {
+        mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
+      }
+
+      if (moveEvt.clientY > (MapLimits.Y_END - PinMain.OFFSET_Y)) {
+        mapPinMain.style.top = MapLimits.Y_END + 'px';
+      } else if (moveEvt.clientY < (MapLimits.Y_START - PinMain.OFFSET_Y)) {
+        mapPinMain.style.top = (MapLimits.Y_START - PinMain.OFFSET_Y) + 'px';
+      } else {
+        mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
+      }
+
+      adFormAddressChange();
+    };
+
+    var mouseUpHandler = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', mouseMoveHandler);
+      document.removeEventListener('mouseup', mouseUpHandler);
+    };
+
+    document.addEventListener('mousemove', mouseMoveHandler);
+    document.addEventListener('mouseup', mouseUpHandler);
   });
 
   mapPinMain.addEventListener('keydown', function (evt) {
-    if (evt.key === 'Enter') {
+    if (evt.key === 'Enter' && !isPageActivated) {
       window.main.pageActivateHandler();
+      isPageActivated = true;
     }
   });
 
