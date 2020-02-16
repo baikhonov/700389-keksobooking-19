@@ -11,21 +11,17 @@
    * @param {*} mapPin - шаблон разметки, который будет заполняться данными
    * @return {*} шаблон метки с заполненными данными
    */
-  var renderMapPin = function (mapPin) {
+  var renderPin = function (mapPin) {
     var mapPinElement = mapPinTemplate.cloneNode(true);
     mapPinElement.querySelector('img').src = mapPin.author.avatar;
     mapPinElement.querySelector('img').alt = mapPin.offer.title;
-    mapPinElement.style = 'left: ' + (mapPin.location.x - window.data.Pin.OFFSET_X) + 'px; top: ' + (mapPin.location.y - window.data.Pin.OFFSET_Y) + 'px;';
+    mapPinElement.style = 'left: ' + (mapPin.location.x - window.map.pin.OFFSET_X) + 'px; top: ' + (mapPin.location.y - window.map.pin.OFFSET_Y) + 'px;';
+
     return mapPinElement;
   };
 
-  var fragment = document.createDocumentFragment();
-  window.data.ads.forEach(function (ad) {
-    fragment.appendChild(renderMapPin(ad));
-  });
-
   window.pin = {
-    fragment: fragment,
+    render: renderPin
   };
 
 })();
