@@ -35,16 +35,14 @@
     adsData = ads;
   };
 
-  var isPageActivated = false;
-
   var adFormAddressChange = function () {
     adFormAddress.value = (parseInt(mapPinMain.style.left.slice(0, -2), 10) + PinMain.OFFSET_X) + ', ' + (parseInt(mapPinMain.style.top.slice(0, -2), 10) + PinMain.OFFSET_Y);
   };
 
   mapPinMain.addEventListener('mousedown', function (evt) {
-    if (evt.button === 0 && !isPageActivated) {
+    if (evt.button === 0 && !window.main.isPageActivated) {
       window.main.pageActivateHandler();
-      isPageActivated = true;
+
     }
 
     var startCoords = {
@@ -99,9 +97,9 @@
   });
 
   mapPinMain.addEventListener('keydown', function (evt) {
-    if (evt.key === 'Enter' && !isPageActivated) {
+    if (evt.key === 'Enter' && !window.main.isPageActivated) {
       window.main.pageActivateHandler();
-      isPageActivated = true;
+      window.main.isPageActivated = true;
     }
   });
 
