@@ -42,7 +42,6 @@
   mapPinMain.addEventListener('mousedown', function (evt) {
     if (evt.button === 0 && !window.main.isPageActivated) {
       window.main.pageActivateHandler();
-
     }
 
     var startCoords = {
