@@ -3,7 +3,6 @@
 (function () {
 
   var map = document.querySelector('.map');
-  var mapPinMain = map.querySelector('.map__pin--main');
   var adForm = document.querySelector('.ad-form');
   var adFormAddress = adForm.querySelector('.ad-form #address');
   var adFormResetButton = adForm.querySelector('.ad-form__reset');
@@ -33,9 +32,11 @@
         document.removeEventListener('keydown', messageKeydownHandler);
       }
     };
-    var messageClickHandler = function () {
-      main.removeChild(messageElement);
-      document.removeEventListener('keydown', messageClickHandler);
+    var messageClickHandler = function (evt) {
+      if (evt.target.closest('div')) {
+        main.removeChild(messageElement);
+        document.removeEventListener('keydown', messageClickHandler);
+      }
     };
     document.addEventListener('keydown', messageKeydownHandler);
     document.addEventListener('click', messageClickHandler);
@@ -104,22 +105,12 @@
 
   var resetButtonClickHandler = function (evt) {
     evt.preventDefault();
+    window.main.deactivatePage();
+    map.classList.remove('map--faded');
+    adForm.classList.remove('ad-form--disabled');
     adForm.reset();
     capacityNumber[2].selected = true;
-    if (map.querySelector('.map__card')) {
-      var mapCard = map.querySelector('.map__card');
-      map.removeChild(mapCard);
-    }
-    var mapPins = map.querySelectorAll('.map__pin');
-    for (var i = 0; i < mapPins.length; i++) {
-      if (mapPins[i].matches('.map__pin') && !mapPins[i].matches('.map__pin--main')) {
-        mapPins[i].remove();
-      }
-    }
-    mapPinMain.style.left = window.map.pinMain.X_INITIAL + 'px';
-    mapPinMain.style.top = window.map.pinMain.Y_INITIAL + 'px';
     adFormAddress.value = (window.map.pinMain.X_INITIAL + window.map.pinMain.OFFSET_X) + ', ' + (window.map.pinMain.Y_INITIAL + window.map.pinMain.OFFSET_Y_INITIAL);
-    adFormResetButton.removeEventListener('click', resetButtonClickHandler);
   };
 
   adFormResetButton.addEventListener('click', resetButtonClickHandler);

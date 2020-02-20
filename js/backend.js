@@ -2,16 +2,16 @@
 
 (function () {
 
+  var TIMEOUT_IN_MS = 10000;
+  var URL_GET = 'https://js.dump.academy/keksobooking/data';
+  var URL_POST = 'https://js.dump.academy/keksobooking';
   var StatusCode = {
     OK: 200
   };
-  var TIMEOUT_IN_MS = 10000;
   var messageSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
   var messageErrorTemplate = document.querySelector('#error').content.querySelector('.error');
 
   var dataDownload = function (onSuccess, onError) {
-    var URL = 'https://js.dump.academy/keksobooking/data';
-
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
@@ -36,7 +36,7 @@
           error = 'Ничего не найдено';
           break;
         default:
-          error = 'Cтатус ответа: : ' + xhr.status + ' ' + xhr.statusText;
+          error = 'Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText;
       }
       if (error) {
         onError(error);
@@ -48,14 +48,11 @@
     xhr.addEventListener('timeout', function () {
       onError('Запрос не успел выполниться за ' + xhr.timeout + ' мс');
     });
-
-    xhr.open('GET', URL);
+    xhr.open('GET', URL_GET);
     xhr.send();
-
   };
 
-  var formUpload = function (data, onLoad, onError) {
-    var URL = 'https://js.dump.academy/keksobooking';
+  var formUpload = function (data, onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -63,7 +60,7 @@
       var error;
       switch (xhr.status) {
         case StatusCode.OK:
-          onLoad(xhr.response);
+          onSuccess(xhr.response);
           window.form.showMessage(messageSuccessTemplate);
           break;
         case 400:
@@ -79,7 +76,7 @@
           error = 'Ничего не найдено';
           break;
         default:
-          error = 'Cтатус ответа: : ' + xhr.status + ' ' + xhr.statusText;
+          error = 'Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText;
       }
       if (error) {
         onError(error);
@@ -93,7 +90,7 @@
       onError('Запрос не успел выполниться за ' + xhr.timeout + ' мс');
     });
 
-    xhr.open('POST', URL);
+    xhr.open('POST', URL_POST);
     xhr.send(data);
   };
 

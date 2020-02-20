@@ -58,6 +58,7 @@
 
     message.textContent = errorMessage;
     document.body.insertAdjacentElement('afterbegin', message);
+    window.setTimeout(document.body.removeChild(message), 3000);
   };
 
   var pageActivateHandler = function () {
