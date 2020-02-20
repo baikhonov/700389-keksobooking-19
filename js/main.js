@@ -2,15 +2,17 @@
 
 (function () {
 
+  var isPageActivated = false;
   var map = document.querySelector('.map');
-  var mapFiltersContainer = map.querySelector('.map__filters-container');
-  var mapFiltersFieldsets = mapFiltersContainer.querySelectorAll('.map__filters fieldset');
-  var mapFiltersSelects = mapFiltersContainer.querySelectorAll('.map__filters select');
+  var mapPinMain = map.querySelector('.map__pin--main');
+  var mapFiltersForm = map.querySelector('.map__filters');
+  var mapFiltersFieldsets = mapFiltersForm.querySelectorAll('.map__filters fieldset');
+  var mapFiltersSelects = mapFiltersForm.querySelectorAll('.map__filters select');
   var adForm = document.querySelector('.ad-form');
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
   var adFormAddress = adForm.querySelector('.ad-form #address');
 
-  var deactivatePage = function () {
+  var makePageDefault = function () {
     mapFiltersSelects.forEach(function (select) {
       select.setAttribute('disabled', 'disabled');
     });
@@ -25,21 +27,42 @@
     window.form.capacityNumber[2].selected = true;
   };
 
-  deactivatePage();
+  makePageDefault();
+
+  var deactivatePage = function () {
+    isPageActivated = false;
+    map.classList.add('map--faded');
+    if (map.querySelector('.map__card')) {
+      var mapCard = map.querySelector('.map__card');
+      map.removeChild(mapCard);
+    }
+    mapPinMain.style.left = window.map.pinMain.X_INITIAL + 'px';
+    mapPinMain.style.top = window.map.pinMain.Y_INITIAL + 'px';
+    var mapPins = map.querySelectorAll('.map__pin');
+    for (var i = 0; i < mapPins.length; i++) {
+      if (mapPins[i].matches('.map__pin') && !mapPins[i].matches('.map__pin--main')) {
+        mapPins[i].remove();
+      }
+    }
+    mapFiltersForm.reset();
+    adForm.classList.add('ad-form--disabled');
+  };
 
   var errorHandler = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
+    var message = document.createElement('div');
+    message.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    message.style.position = 'absolute';
+    message.style.left = 0;
+    message.style.right = 0;
+    message.style.fontSize = '30px';
 
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
+    message.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', message);
+    window.setTimeout(document.body.removeChild(message), 3000);
   };
 
   var pageActivateHandler = function () {
+    isPageActivated = true;
     window.backend.load(window.map.showPins, errorHandler);
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
@@ -57,6 +80,9 @@
 
   window.main = {
     pageActivateHandler: pageActivateHandler,
+    makePageDefault: makePageDefault,
+    deactivatePage: deactivatePage,
+    isPageActivated: isPageActivated,
   };
 
 
