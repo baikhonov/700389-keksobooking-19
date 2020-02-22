@@ -12,25 +12,7 @@
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
   var adFormAddress = adForm.querySelector('.ad-form #address');
 
-  var makePageDefault = function () {
-    mapFiltersSelects.forEach(function (select) {
-      select.setAttribute('disabled', 'disabled');
-    });
-    mapFiltersFieldsets.forEach(function (fieldset) {
-      fieldset.setAttribute('disabled', 'disabled');
-    });
-    adFormFieldsets.forEach(function (fieldset) {
-      fieldset.setAttribute('disabled', 'disabled');
-    });
-    adFormAddress.setAttribute('readonly', 'readonly');
-    adFormAddress.value = (window.map.pinMain.X_INITIAL + window.map.pinMain.OFFSET_X) + ', ' + (window.map.pinMain.Y_INITIAL + window.map.pinMain.OFFSET_Y_INITIAL);
-    window.form.capacityNumber[2].selected = true;
-  };
-
-  makePageDefault();
-
   var deactivatePage = function () {
-    isPageActivated = false;
     map.classList.add('map--faded');
     if (map.querySelector('.map__card')) {
       var mapCard = map.querySelector('.map__card');
@@ -45,25 +27,26 @@
       }
     }
     mapFiltersForm.reset();
+    mapFiltersSelects.forEach(function (select) {
+      select.setAttribute('disabled', 'disabled');
+    });
+    mapFiltersFieldsets.forEach(function (fieldset) {
+      fieldset.setAttribute('disabled', 'disabled');
+    });
     adForm.classList.add('ad-form--disabled');
+
+    adFormFieldsets.forEach(function (fieldset) {
+      fieldset.setAttribute('disabled', 'disabled');
+    });
+    adFormAddress.setAttribute('readonly', 'readonly');
+    adFormAddress.value = (window.map.pinMain.X_INITIAL + window.map.pinMain.OFFSET_X) + ', ' + (window.map.pinMain.Y_INITIAL + window.map.pinMain.OFFSET_Y_INITIAL);
+    window.form.capacityNumber[2].selected = true;
   };
 
-  var errorHandler = function (errorMessage) {
-    var message = document.createElement('div');
-    message.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    message.style.position = 'absolute';
-    message.style.left = 0;
-    message.style.right = 0;
-    message.style.fontSize = '30px';
+  deactivatePage();
 
-    message.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', message);
-    window.setTimeout(document.body.removeChild(message), 3000);
-  };
-
-  var pageActivateHandler = function () {
-    isPageActivated = true;
-    window.backend.load(window.map.showPins, errorHandler);
+  var activatePage = function () {
+    window.backend.load(window.map.showPins);
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
     adFormFieldsets.forEach(function (fieldset) {
@@ -79,11 +62,9 @@
   };
 
   window.main = {
-    pageActivateHandler: pageActivateHandler,
-    makePageDefault: makePageDefault,
+    activatePage: activatePage,
     deactivatePage: deactivatePage,
     isPageActivated: isPageActivated,
   };
-
 
 })();

@@ -41,7 +41,8 @@
 
   mapPinMain.addEventListener('mousedown', function (evt) {
     if (evt.button === 0 && !window.main.isPageActivated) {
-      window.main.pageActivateHandler();
+      window.main.activatePage();
+      window.main.isPageActivated = true;
     }
 
     var startCoords = {
@@ -97,7 +98,7 @@
 
   mapPinMain.addEventListener('keydown', function (evt) {
     if (evt.key === 'Enter' && !window.main.isPageActivated) {
-      window.main.pageActivateHandler();
+      window.main.activatePage();
       window.main.isPageActivated = true;
     }
   });
@@ -120,7 +121,7 @@
   window.map = {
     pin: Pin,
     pinMain: PinMain,
-    showPins: mapShowPins
+    showPins: mapShowPins,
   };
 
 })();

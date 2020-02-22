@@ -2,9 +2,7 @@
 
 (function () {
 
-  var map = document.querySelector('.map');
   var adForm = document.querySelector('.ad-form');
-  var adFormAddress = adForm.querySelector('.ad-form #address');
   var adFormResetButton = adForm.querySelector('.ad-form__reset');
   var roomNumber = adForm.querySelector('#room_number');
   var capacityNumber = adForm.querySelector('#capacity');
@@ -35,7 +33,7 @@
     var messageClickHandler = function (evt) {
       if (evt.target.closest('div')) {
         main.removeChild(messageElement);
-        document.removeEventListener('keydown', messageClickHandler);
+        document.removeEventListener('click', messageClickHandler);
       }
     };
     document.addEventListener('keydown', messageKeydownHandler);
@@ -81,36 +79,19 @@
   timeInSelect.addEventListener('change', selectTimeValidateHandler);
   timeOutSelect.addEventListener('change', selectTimeValidateHandler);
 
-  var errorHandler = function (errorMessage) {
-    var message = document.createElement('div');
-    message.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    message.style.position = 'absolute';
-    message.style.left = 0;
-    message.style.right = 0;
-    message.style.fontSize = '30px';
-
-    message.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', message);
-  };
-
   adForm.addEventListener('submit', function (evt) {
-    window.backend.save(new FormData(adForm), function () {
-      // здесь будет выводиться сообщение о статусе операции
-      adForm.reset();
-      window.main.makePageDefault();
-      window.main.deactivatePage();
-    }, errorHandler);
     evt.preventDefault();
+    window.backend.save(new FormData(adForm), function () {
+      adForm.reset();
+      window.main.deactivatePage();
+      window.main.isPageActivated = false;
+    });
   });
 
   var resetButtonClickHandler = function (evt) {
     evt.preventDefault();
     window.main.deactivatePage();
-    map.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
-    adForm.reset();
-    capacityNumber[2].selected = true;
-    adFormAddress.value = (window.map.pinMain.X_INITIAL + window.map.pinMain.OFFSET_X) + ', ' + (window.map.pinMain.Y_INITIAL + window.map.pinMain.OFFSET_Y_INITIAL);
+    window.main.isPageActivated = false;
   };
 
   adFormResetButton.addEventListener('click', resetButtonClickHandler);
