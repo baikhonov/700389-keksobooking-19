@@ -11,7 +11,13 @@
   var messageSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
   var messageErrorTemplate = document.querySelector('#error').content.querySelector('.error');
 
-  var dataDownload = function (onSuccess, onError) {
+  var errorHandler = function (message) {
+    var errorText = messageErrorTemplate.querySelector('p');
+    errorText.textContent = message;
+    window.form.showMessage(messageErrorTemplate);
+  };
+
+  var setupXhr = function (onSuccess, showMessage) {
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
@@ -22,6 +28,9 @@
       switch (xhr.status) {
         case StatusCode.OK:
           onSuccess(xhr.response);
+          if (showMessage) {
+            window.form.showMessage(messageSuccessTemplate);
+          }
           break;
         case 400:
           error = 'Неверный запрос';
@@ -36,59 +45,32 @@
           error = 'Ничего не найдено';
           break;
         default:
-          error = 'Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText;
+          // error = 'Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText;
+          error = 'Проблема на стороне сервера';
       }
       if (error) {
-        onError(error);
+        errorHandler(error);
       }
     });
     xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
+      errorHandler('Произошла ошибка соединения');
     });
     xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + ' мс');
+      errorHandler('Запрос не успел выполниться за ' + xhr.timeout + ' мс');
     });
+
+    return xhr;
+  };
+
+  var dataDownload = function (onSuccess) {
+    var xhr = setupXhr(onSuccess, false);
+
     xhr.open('GET', URL_GET);
     xhr.send();
   };
 
-  var formUpload = function (data, onSuccess, onError) {
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
-
-    xhr.addEventListener('load', function () {
-      var error;
-      switch (xhr.status) {
-        case StatusCode.OK:
-          onSuccess(xhr.response);
-          window.form.showMessage(messageSuccessTemplate);
-          break;
-        case 400:
-          error = 'Неверный запрос';
-          break;
-        case 401:
-          error = 'Пользователь не авторизован';
-          break;
-        case 403:
-          error = 'Ты не пройдёшь!';
-          break;
-        case 404:
-          error = 'Ничего не найдено';
-          break;
-        default:
-          error = 'Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText;
-      }
-      if (error) {
-        onError(error);
-        window.form.showMessage(messageErrorTemplate);
-      }
-    });
-    xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
-    });
-    xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + ' мс');
-    });
+  var formUpload = function (data, onSuccess) {
+    var xhr = setupXhr(onSuccess, true);
 
     xhr.open('POST', URL_POST);
     xhr.send(data);

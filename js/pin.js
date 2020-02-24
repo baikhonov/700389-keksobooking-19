@@ -2,6 +2,8 @@
 
 (function () {
 
+  var MAX_PINS_COUNT = 5;
+  var mapPins = document.querySelector('.map__pins');
   var mapPinTemplate = document.querySelector('#pin')
     .content.
     querySelector('.map__pin');
@@ -14,6 +16,7 @@
    */
   var renderPin = function (mapPin, pinNumber) {
     var mapPinElement = mapPinTemplate.cloneNode(true);
+    mapPinElement.classList.add('map__pin--secondary');
     mapPinElement.querySelector('img').src = mapPin.author.avatar;
     mapPinElement.querySelector('img').alt = mapPin.offer.title;
     mapPinElement.style = 'left: ' + (mapPin.location.x - window.map.pin.OFFSET_X) + 'px; top: ' + (mapPin.location.y - window.map.pin.OFFSET_Y) + 'px;';
@@ -22,8 +25,21 @@
     return mapPinElement;
   };
 
+  var pinsList = document.createElement('div');
+
+  var renderPins = function (ads) {
+    var maxPinsCount = ads.length > MAX_PINS_COUNT ? MAX_PINS_COUNT : ads.length;
+    pinsList.textContent = '';
+    // var fragment = document.createDocumentFragment();
+    for (var i = 0; i < maxPinsCount; i++) {
+      pinsList.appendChild(renderPin(ads[i], i));
+    }
+    // pinsList.appendChild(fragment);
+    mapPins.appendChild(pinsList);
+  };
+
   window.pin = {
-    render: renderPin
+    render: renderPins,
   };
 
 })();

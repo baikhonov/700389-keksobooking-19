@@ -24,16 +24,6 @@
   var mapPinMain = map.querySelector('.map__pin--main');
   var mapFiltersContainer = map.querySelector('.map__filters-container');
   var adFormAddress = document.querySelector('.ad-form #address');
-  var adsData;
-
-  var mapShowPins = function (ads) {
-    var fragment = document.createDocumentFragment();
-    ads.forEach(function (ad, index) {
-      fragment.appendChild(window.pin.render(ad, index));
-    });
-    mapPins.appendChild(fragment);
-    adsData = ads;
-  };
 
   var adFormAddressChange = function () {
     adFormAddress.value = (parseInt(mapPinMain.style.left.slice(0, -2), 10) + PinMain.OFFSET_X) + ', ' + (parseInt(mapPinMain.style.top.slice(0, -2), 10) + PinMain.OFFSET_Y);
@@ -41,7 +31,8 @@
 
   mapPinMain.addEventListener('mousedown', function (evt) {
     if (evt.button === 0 && !window.main.isPageActivated) {
-      window.main.pageActivateHandler();
+      window.main.activatePage();
+      window.main.isPageActivated = true;
     }
 
     var startCoords = {
@@ -97,7 +88,7 @@
 
   mapPinMain.addEventListener('keydown', function (evt) {
     if (evt.key === 'Enter' && !window.main.isPageActivated) {
-      window.main.pageActivateHandler();
+      window.main.activatePage();
       window.main.isPageActivated = true;
     }
   });
@@ -106,12 +97,21 @@
     var mapCard;
     if (evt.target.closest('.map__pin') && !evt.target.closest('.map__pin--main')) {
       var target = evt.target.closest('.map__pin');
+      var pinsList = mapPins.querySelectorAll('.map__pin');
+      if (!target.classList.contains('map__pin--active')) {
+        Array.from(pinsList).map(function (pin) {
+          if (pin.classList.contains('map__pin--active')) {
+            pin.classList.remove('map__pin--active');
+          }
+        });
+        target.classList.add('map__pin--active');
+      }
       var numberAd = target.dataset.number;
       if (map.querySelector('.map__card')) {
         mapCard = map.querySelector('.map__card');
         map.removeChild(mapCard);
       }
-      mapFiltersContainer.insertAdjacentElement('beforebegin', window.card.render(adsData[numberAd]));
+      mapFiltersContainer.insertAdjacentElement('beforebegin', window.card.render(window.similar.ads[numberAd]));
     }
   };
 
@@ -120,7 +120,6 @@
   window.map = {
     pin: Pin,
     pinMain: PinMain,
-    showPins: mapShowPins
   };
 
 })();
