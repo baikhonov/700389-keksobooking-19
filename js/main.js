@@ -46,7 +46,7 @@
   deactivatePage();
 
   var activatePage = function () {
-    window.backend.load(window.map.showPins);
+    window.backend.load(window.similar.showPins);
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
     adFormFieldsets.forEach(function (fieldset) {

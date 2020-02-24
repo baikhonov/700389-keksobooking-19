@@ -99,7 +99,6 @@
   window.form = {
     capacityNumber: capacityNumber,
     showMessage: showMessage,
-    resetButtonClickHandler: resetButtonClickHandler
   };
 
 })();
