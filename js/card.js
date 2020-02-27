@@ -73,6 +73,13 @@
     var cardElementClose = cardElement.querySelector('.popup__close');
     cardElementClose.addEventListener('click', function () {
       map.removeChild(cardElement);
+      var pinsList = document.querySelectorAll('.map__pin--secondary');
+      Array.from(pinsList).map(function (pin) {
+        if (pin.classList.contains('map__pin--active')) {
+          pin.classList.remove('map__pin--active');
+        }
+      });
+
     });
     var mapKeydownHandler = function (evt) {
       if (map.querySelector('.map__card') && evt.key === 'Escape') {
@@ -86,8 +93,16 @@
     return cardElement;
   };
 
+  var removeCard = function () {
+    var mapCard = map.querySelector('.map__card');
+    if (mapCard) {
+      mapCard.remove();
+    }
+  };
+
   window.card = {
     render: renderCard,
+    remove: removeCard
   };
 
 })();
