@@ -2,51 +2,76 @@
 
 (function () {
 
-  var TIMEOUT_IN_MS = 10000;
-  var URL_GET = 'https://js.dump.academy/keksobooking/data';
-  var URL_POST = 'https://js.dump.academy/keksobooking';
-  var StatusCode = {
-    OK: 200
+  var TIMEOUT = 10000;
+  var Url = {
+    GET: 'https://js.dump.academy/keksobooking/data',
+    POST: 'https://js.dump.academy/keksobooking',
   };
+  var StatusCode = {
+    OK: 200,
+    BAD_REQUEST: 400,
+    UNATHORIZED: 401,
+    FORBIDDEN: 403,
+    NOT_FOUND: 404,
+  };
+  var main = document.querySelector('main');
   var messageSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
   var messageErrorTemplate = document.querySelector('#error').content.querySelector('.error');
+
+  var showMessage = function (messageTemplate) {
+    var messageElement = messageTemplate.cloneNode(true);
+    main.appendChild(messageElement);
+    var messageKeydownHandler = function (evt) {
+      if (evt.key === 'Escape') {
+        main.removeChild(messageElement);
+        document.removeEventListener('keydown', messageKeydownHandler);
+      }
+    };
+    var messageClickHandler = function (evt) {
+      if (evt.target.closest('div')) {
+        main.removeChild(messageElement);
+        document.removeEventListener('click', messageClickHandler);
+      }
+    };
+    document.addEventListener('keydown', messageKeydownHandler);
+    document.addEventListener('click', messageClickHandler);
+  };
 
   var errorHandler = function (message) {
     var errorText = messageErrorTemplate.querySelector('p');
     errorText.textContent = message;
-    window.form.showMessage(messageErrorTemplate);
+    showMessage(messageErrorTemplate);
   };
 
-  var setupXhr = function (onSuccess, showMessage) {
+  var setupXhr = function (onSuccess, showInfo) {
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
-    xhr.timeout = TIMEOUT_IN_MS;
+    xhr.timeout = TIMEOUT;
 
     xhr.addEventListener('load', function () {
       var error;
       switch (xhr.status) {
         case StatusCode.OK:
           onSuccess(xhr.response);
-          if (showMessage) {
-            window.form.showMessage(messageSuccessTemplate);
+          if (showInfo) {
+            showMessage(messageSuccessTemplate);
           }
           break;
-        case 400:
+        case StatusCode.BAD_REQUEST:
           error = 'Неверный запрос';
           break;
-        case 401:
-          error = 'Пользователь не авторизован';
+        case StatusCode.UNATHORIZED:
+          error = 'Вы не авторизованы';
           break;
-        case 403:
-          error = 'Ты не пройдёшь!';
+        case StatusCode.FORBIDDEN:
+          error = 'Доступ запрещён';
           break;
-        case 404:
+        case StatusCode.NOT_FOUND:
           error = 'Ничего не найдено';
           break;
         default:
-          // error = 'Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText;
-          error = 'Проблема на стороне сервера';
+          error = 'Неизвестная ошибка';
       }
       if (error) {
         errorHandler(error);
@@ -62,23 +87,23 @@
     return xhr;
   };
 
-  var dataDownload = function (onSuccess) {
+  var downloadAds = function (onSuccess) {
     var xhr = setupXhr(onSuccess, false);
 
-    xhr.open('GET', URL_GET);
+    xhr.open('GET', Url.GET);
     xhr.send();
   };
 
-  var formUpload = function (data, onSuccess) {
+  var uploadForm = function (data, onSuccess) {
     var xhr = setupXhr(onSuccess, true);
 
-    xhr.open('POST', URL_POST);
+    xhr.open('POST', Url.POST);
     xhr.send(data);
   };
 
   window.backend = {
-    load: dataDownload,
-    save: formUpload,
+    load: downloadAds,
+    save: uploadForm,
   };
 
 })();

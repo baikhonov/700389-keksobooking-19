@@ -19,27 +19,6 @@
     100: [0],
   };
 
-  var main = document.querySelector('main');
-
-  var showMessage = function (messageTemplate) {
-    var messageElement = messageTemplate.cloneNode(true);
-    main.appendChild(messageElement);
-    var messageKeydownHandler = function (evt) {
-      if (evt.key === 'Escape') {
-        main.removeChild(messageElement);
-        document.removeEventListener('keydown', messageKeydownHandler);
-      }
-    };
-    var messageClickHandler = function (evt) {
-      if (evt.target.closest('div')) {
-        main.removeChild(messageElement);
-        document.removeEventListener('click', messageClickHandler);
-      }
-    };
-    document.addEventListener('keydown', messageKeydownHandler);
-    document.addEventListener('click', messageClickHandler);
-  };
-
   var selectsRoomCapacityValidateHandler = function () {
     var rooms = parseInt(roomNumber.value, 10);
     var guests = parseInt(capacityNumber.value, 10);
@@ -98,7 +77,6 @@
 
   window.form = {
     capacityNumber: capacityNumber,
-    showMessage: showMessage,
   };
 
 })();
