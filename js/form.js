@@ -18,6 +18,28 @@
     3: [1, 2, 3],
     100: [0],
   };
+  var main = document.querySelector('main');
+  var messageSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
+  var messageErrorTemplate = document.querySelector('#error').content.querySelector('.error');
+
+  var showMessage = function (messageTemplate) {
+    var messageElement = messageTemplate.cloneNode(true);
+    main.appendChild(messageElement);
+    var messageKeydownHandler = function (evt) {
+      if (evt.key === 'Escape') {
+        main.removeChild(messageElement);
+        document.removeEventListener('keydown', messageKeydownHandler);
+      }
+    };
+    var messageClickHandler = function (evt) {
+      if (evt.target.closest('div')) {
+        main.removeChild(messageElement);
+        document.removeEventListener('click', messageClickHandler);
+      }
+    };
+    document.addEventListener('keydown', messageKeydownHandler);
+    document.addEventListener('click', messageClickHandler);
+  };
 
   var selectsRoomCapacityValidateHandler = function () {
     var rooms = parseInt(roomNumber.value, 10);
@@ -58,13 +80,26 @@
   timeInSelect.addEventListener('change', selectTimeValidateHandler);
   timeOutSelect.addEventListener('change', selectTimeValidateHandler);
 
+  var correctInitialValues = function () {
+    capacityNumber[2].selected = true;
+    priceOfHouse.setAttribute('placeholder', housesPricesValues[typeOfHouse.value]);
+    priceOfHouse.setAttribute('min', housesPricesValues[typeOfHouse.value]);
+  };
+
+  var formSubmitSuccess = function () {
+    adForm.reset();
+    window.main.deactivatePage();
+    window.main.isPageActivated = false;
+    showMessage(messageSuccessTemplate);
+  };
+
+  var formSubmitError = function () {
+    showMessage(messageErrorTemplate);
+  };
+
   adForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(adForm), function () {
-      adForm.reset();
-      window.main.deactivatePage();
-      window.main.isPageActivated = false;
-    });
+    window.backend.save(new FormData(adForm), formSubmitSuccess, formSubmitError);
   });
 
   var resetButtonClickHandler = function (evt) {
@@ -76,7 +111,7 @@
   adFormResetButton.addEventListener('click', resetButtonClickHandler);
 
   window.form = {
-    capacityNumber: capacityNumber,
+    correctInitialValues: correctInitialValues,
   };
 
 })();

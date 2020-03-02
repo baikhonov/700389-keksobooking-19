@@ -40,13 +40,13 @@
     });
     adFormAddress.setAttribute('readonly', 'readonly');
     adFormAddress.value = (window.map.pinMain.X_INITIAL + window.map.pinMain.OFFSET_X) + ', ' + (window.map.pinMain.Y_INITIAL + window.map.pinMain.OFFSET_Y_INITIAL);
-    window.form.capacityNumber[2].selected = true;
+    window.form.correctInitialValues();
   };
 
   deactivatePage();
 
   var activatePage = function () {
-    window.backend.load(window.map.showPins);
+    window.backend.load(window.map.showPins, window.backend.errorHandler);
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
     adFormFieldsets.forEach(function (fieldset) {

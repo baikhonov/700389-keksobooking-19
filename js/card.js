@@ -21,14 +21,14 @@
   var map = document.querySelector('.map');
 
   var cardTemplate = document.querySelector('#card')
-    .content.
-    querySelector('.map__card');
+  .content.
+  querySelector('.map__card');
 
   /**
-   * Создаёт DOM-элемент карточки объявления на карте
-   * @param {*} card - шаблон карточки, который будет заполняться данными
-   * @return {*} возвращает шаблон карточки с заполненными данными
-   */
+  * Создаёт DOM-элемент карточки объявления на карте
+  * @param {*} card - шаблон карточки, который будет заполняться данными
+  * @return {*} возвращает шаблон карточки с заполненными данными
+  */
   var renderCard = function (card) {
     var cardElement = cardTemplate.cloneNode(true);
     cardElement.querySelector('.popup__avatar').src = card.author.avatar;
@@ -72,19 +72,19 @@
     }
     var cardElementClose = cardElement.querySelector('.popup__close');
     cardElementClose.addEventListener('click', function () {
-      map.removeChild(cardElement);
-      var pinsList = document.querySelectorAll('.map__pin--secondary');
-      Array.from(pinsList).map(function (pin) {
-        if (pin.classList.contains('map__pin--active')) {
-          pin.classList.remove('map__pin--active');
-        }
-      });
-
+      cardElement.remove();
+      var activePin = map.querySelector('.map__pin--active');
+      if (activePin) {
+        activePin.classList.remove('map__pin--active');
+      }
     });
     var mapKeydownHandler = function (evt) {
       if (map.querySelector('.map__card') && evt.key === 'Escape') {
-        var mapCard = map.querySelector('.map__card');
-        map.removeChild(mapCard);
+        cardElement.remove();
+        var activePin = map.querySelector('.map__pin--active');
+        if (activePin) {
+          activePin.classList.remove('map__pin--active');
+        }
         document.removeEventListener('keydown', mapKeydownHandler);
       }
     };

@@ -14,36 +14,20 @@
     FORBIDDEN: 403,
     NOT_FOUND: 404,
   };
-  var main = document.querySelector('main');
-  var messageSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
-  var messageErrorTemplate = document.querySelector('#error').content.querySelector('.error');
 
-  var showMessage = function (messageTemplate) {
-    var messageElement = messageTemplate.cloneNode(true);
-    main.appendChild(messageElement);
-    var messageKeydownHandler = function (evt) {
-      if (evt.key === 'Escape') {
-        main.removeChild(messageElement);
-        document.removeEventListener('keydown', messageKeydownHandler);
-      }
-    };
-    var messageClickHandler = function (evt) {
-      if (evt.target.closest('div')) {
-        main.removeChild(messageElement);
-        document.removeEventListener('click', messageClickHandler);
-      }
-    };
-    document.addEventListener('keydown', messageKeydownHandler);
-    document.addEventListener('click', messageClickHandler);
+  var errorHandler = function (errorMessage) {
+    var message = document.createElement('div');
+    message.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    message.style.position = 'absolute';
+    message.style.left = 0;
+    message.style.right = 0;
+    message.style.fontSize = '30px';
+
+    message.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', message);
   };
 
-  var errorHandler = function (message) {
-    var errorText = messageErrorTemplate.querySelector('p');
-    errorText.textContent = message;
-    showMessage(messageErrorTemplate);
-  };
-
-  var setupXhr = function (onSuccess, showInfo) {
+  var setupXhr = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
@@ -54,9 +38,6 @@
       switch (xhr.status) {
         case StatusCode.OK:
           onSuccess(xhr.response);
-          if (showInfo) {
-            showMessage(messageSuccessTemplate);
-          }
           break;
         case StatusCode.BAD_REQUEST:
           error = 'Неверный запрос';
@@ -71,31 +52,31 @@
           error = 'Ничего не найдено';
           break;
         default:
-          error = 'Неизвестная ошибка';
+          error = 'Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText;
       }
       if (error) {
-        errorHandler(error);
+        onError(error);
       }
     });
     xhr.addEventListener('error', function () {
-      errorHandler('Произошла ошибка соединения');
+      onError('Произошла ошибка соединения');
     });
     xhr.addEventListener('timeout', function () {
-      errorHandler('Запрос не успел выполниться за ' + xhr.timeout + ' мс');
+      onError('Запрос не успел выполниться за ' + xhr.timeout + ' мс');
     });
 
     return xhr;
   };
 
-  var downloadAds = function (onSuccess) {
-    var xhr = setupXhr(onSuccess, false);
+  var downloadAds = function (onSuccess, onError) {
+    var xhr = setupXhr(onSuccess, onError);
 
     xhr.open('GET', Url.GET);
     xhr.send();
   };
 
-  var uploadForm = function (data, onSuccess) {
-    var xhr = setupXhr(onSuccess, true);
+  var uploadForm = function (data, onSuccess, onError) {
+    var xhr = setupXhr(onSuccess, onError);
 
     xhr.open('POST', Url.POST);
     xhr.send(data);
@@ -104,6 +85,7 @@
   window.backend = {
     load: downloadAds,
     save: uploadForm,
+    errorHandler: errorHandler
   };
 
 })();

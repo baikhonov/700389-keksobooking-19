@@ -26,11 +26,14 @@
   };
 
   var renderPins = function (ads) {
-    var maxPinsCount = (ads.length > MAX_PINS_COUNT) ? MAX_PINS_COUNT : ads.length;
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < maxPinsCount; i++) {
-      fragment.appendChild(renderPin(ads[i], i));
+    if (ads.length > MAX_PINS_COUNT) {
+      ads = ads.slice(0, MAX_PINS_COUNT);
     }
+    // console.log(ads);
+    var fragment = document.createDocumentFragment();
+    ads.forEach(function (ad, index) {
+      fragment.appendChild(renderPin(ad, index));
+    });
     mapPins.appendChild(fragment);
   };
 
