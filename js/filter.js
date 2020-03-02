@@ -25,20 +25,16 @@
   filterForm.addEventListener('change', function (evt) {
     switch (evt.target) {
       case filterHouseType:
-        // console.log('Изменили тип жилья');
         // фильтрация по типу жилья
         filterHouseTypeChange(window.filter.initialAds);
         break;
       case filterHousePrice:
-        // console.log('Изменили цену жилья');
         // фильтрация по цене жилья
         break;
       case filterHouseRooms:
-        // console.log('Изменили количество комнат');
         // фильтрация по количеству комнат
         break;
       case filterHouseGuests:
-        // console.log('Изменили количество гостей');
         // фильтрация по количеству гостей
         break;
       default:
@@ -48,7 +44,6 @@
 
 
   var updatePins = function () {
-    console.log(window.filter.filteredAds);
     window.card.remove();
     window.pin.removeAll();
     window.pin.render(window.filter.filteredAds);
