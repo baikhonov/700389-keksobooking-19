@@ -3,6 +3,10 @@
 (function () {
 
   var MAX_PINS_COUNT = 5;
+  var Pin = {
+    OFFSET_X: 25,
+    OFFSET_Y: 70,
+  };
   var mapPins = document.querySelector('.map__pins');
   var mapPinTemplate = document.querySelector('#pin')
     .content.
@@ -19,7 +23,7 @@
     mapPinElement.classList.add('map__pin--secondary');
     mapPinElement.querySelector('img').src = mapPin.author.avatar;
     mapPinElement.querySelector('img').alt = mapPin.offer.title;
-    mapPinElement.style = 'left: ' + (mapPin.location.x - window.map.pin.OFFSET_X) + 'px; top: ' + (mapPin.location.y - window.map.pin.OFFSET_Y) + 'px;';
+    mapPinElement.style = 'left: ' + (mapPin.location.x - Pin.OFFSET_X) + 'px; top: ' + (mapPin.location.y - Pin.OFFSET_Y) + 'px;';
 
     mapPinElement.addEventListener('mousedown', mapPinElementMousedown);
     function mapPinElementMousedown(evt) {

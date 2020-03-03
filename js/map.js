@@ -8,10 +8,6 @@
     Y_START: 130,
     Y_END: 630,
   };
-  var Pin = {
-    OFFSET_X: 25,
-    OFFSET_Y: 70,
-  };
   var PinMain = {
     X_INITIAL: 570,
     Y_INITIAL: 375,
@@ -20,8 +16,36 @@
     OFFSET_Y_INITIAL: 32,
   };
   var map = document.querySelector('.map');
+  var mapFiltersForm = map.querySelector('.map__filters');
+  var mapFiltersFieldsets = mapFiltersForm.querySelectorAll('.map__filters fieldset');
+  var mapFiltersSelects = mapFiltersForm.querySelectorAll('.map__filters select');
   var mapPinMain = map.querySelector('.map__pin--main');
   var adFormAddress = document.querySelector('.ad-form #address');
+
+  var activateMap = function () {
+    map.classList.remove('map--faded');
+    mapFiltersSelects.forEach(function (select) {
+      select.removeAttribute('disabled');
+    });
+    mapFiltersFieldsets.forEach(function (fieldset) {
+      fieldset.removeAttribute('disabled');
+    });
+  };
+
+  var deactivateMap = function () {
+    map.classList.add('map--faded');
+    window.card.remove();
+    window.pin.removeAll();
+    mapPinMain.style.left = PinMain.X_INITIAL + 'px';
+    mapPinMain.style.top = PinMain.Y_INITIAL + 'px';
+    mapFiltersForm.reset();
+    mapFiltersSelects.forEach(function (select) {
+      select.setAttribute('disabled', 'disabled');
+    });
+    mapFiltersFieldsets.forEach(function (fieldset) {
+      fieldset.setAttribute('disabled', 'disabled');
+    });
+  };
 
   /**
    * Изменение адреса в поле согласно координатам главного пина
@@ -110,9 +134,10 @@
   };
 
   window.map = {
-    pin: Pin,
     pinMain: PinMain,
     showPins: showPins,
+    activate: activateMap,
+    deactivate: deactivateMap,
   };
 
 })();
