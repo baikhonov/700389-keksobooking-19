@@ -6,10 +6,10 @@
   var filterForm = document.querySelector('.map__filters');
 
   var filterHouseType = filterForm.querySelector('#housing-type');
-  var HouseTypeValue = filterHouseType.value;
+  var houseTypeValue = filterHouseType.value;
 
   var filterHousePrice = filterForm.querySelector('#housing-price');
-  var HousePriceValue = filterHousePrice.value;
+  var housePriceValue = filterHousePrice.value;
   var priceMap = {
     low: [0, 9999],
     middle: [10000, 49999],
@@ -17,40 +17,43 @@
   };
 
   var filterHouseRooms = filterForm.querySelector('#housing-rooms');
-  var HouseRoomValue = filterHouseRooms.value;
+  var houseRoomValue = filterHouseRooms.value;
 
   var filterHouseGuests = filterForm.querySelector('#housing-guests');
-  var HouseGuestsValue = filterHouseGuests.value;
+  var houseGuestsValue = filterHouseGuests.value;
+
+  var filterHouseFeatures = filterForm.querySelector('#housing-features');
+
 
   var filterHouseTypeChange = function (ad) {
-    if (HouseTypeValue === 'any') {
+    if (houseTypeValue === 'any') {
       return true;
     } else {
-      return ad.offer.type === HouseTypeValue;
+      return ad.offer.type === houseTypeValue;
     }
   };
 
   var filterHousePriceChange = function (ad) {
-    if (HousePriceValue === 'any') {
+    if (housePriceValue === 'any') {
       return true;
     } else {
-      return ad.offer.price >= priceMap[HousePriceValue][0] && ad.offer.price <= priceMap[HousePriceValue][1];
+      return ad.offer.price >= priceMap[HousePriceValue][0] && ad.offer.price <= priceMap[housePriceValue][1];
     }
   };
 
   var filterHouseRoomChange = function (ad) {
-    if (HouseRoomValue === 'any') {
+    if (houseRoomValue === 'any') {
       return true;
     } else {
-      return ad.offer.rooms === parseInt(HouseRoomValue, 10);
+      return ad.offer.rooms === parseInt(houseRoomValue, 10);
     }
   };
 
   var filterHouseGuestsChange = function (ad) {
-    if (HouseGuestsValue === 'any') {
+    if (houseGuestsValue === 'any') {
       return true;
     } else {
-      return ad.offer.guests === parseInt(HouseGuestsValue, 10);
+      return ad.offer.guests === parseInt(houseGuestsValue, 10);
     }
   };
 
@@ -59,19 +62,19 @@
     switch (evt.target) {
       case filterHouseType:
         // фильтрация по типу жилья
-        HouseTypeValue = evt.target.value;
+        houseTypeValue = evt.target.value;
         break;
       case filterHousePrice:
         // фильтрация по цене жилья
-        HousePriceValue = evt.target.value;
+        housePriceValue = evt.target.value;
         break;
       case filterHouseRooms:
         // фильтрация по количеству комнат
-        HouseRoomValue = evt.target.value;
+        houseRoomValue = evt.target.value;
         break;
       case filterHouseGuests:
         // фильтрация по количеству гостей
-        HouseGuestsValue = evt.target.value;
+        houseGuestsValue = evt.target.value;
         break;
       default:
         // ничего не фильтруем

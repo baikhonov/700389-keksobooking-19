@@ -92,6 +92,7 @@
   });
 
   var showPins = function (data) {
+    console.log(data);
     window.pin.render(data);
     window.filter.initialAds = data;
   };
