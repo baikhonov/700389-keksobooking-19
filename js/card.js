@@ -21,15 +21,15 @@
   var map = document.querySelector('.map');
 
   var cardTemplate = document.querySelector('#card')
-    .content.
-    querySelector('.map__card');
+  .content.
+  querySelector('.map__card');
 
   /**
-   * Создаёт DOM-элемент карточки объявления на карте
-   * @param {*} card - шаблон карточки, который будет заполняться данными
-   * @return {*} возвращает шаблон карточки с заполненными данными
-   */
-  var renderCard = function (card) {
+  * Создаёт DOM-элемент карточки объявления на карте
+  * @param {*} card - шаблон карточки, который будет заполняться данными
+  * @return {*} возвращает шаблон карточки с заполненными данными
+  */
+  var prepareCard = function (card) {
     var cardElement = cardTemplate.cloneNode(true);
     cardElement.querySelector('.popup__avatar').src = card.author.avatar;
     cardElement.querySelector('.popup__title').textContent = card.offer.title;
@@ -72,12 +72,13 @@
     }
     var cardElementClose = cardElement.querySelector('.popup__close');
     cardElementClose.addEventListener('click', function () {
-      map.removeChild(cardElement);
+      cardElement.remove();
+      window.pin.removeActiveClass();
     });
     var mapKeydownHandler = function (evt) {
       if (map.querySelector('.map__card') && evt.key === 'Escape') {
-        var mapCard = map.querySelector('.map__card');
-        map.removeChild(mapCard);
+        cardElement.remove();
+        window.pin.removeActiveClass();
         document.removeEventListener('keydown', mapKeydownHandler);
       }
     };
@@ -86,8 +87,29 @@
     return cardElement;
   };
 
+  /**
+   * Отображает карточку на карте
+   * @param {Object} card - данные карточки
+   */
+  var showCard = function (card) {
+    removeCard();
+    window.pin.removeActiveClass();
+    map.querySelector('.map__filters-container').insertAdjacentElement('beforebegin', prepareCard(card));
+  };
+
+  /**
+   * Удаляет карточку на карте
+   */
+  var removeCard = function () {
+    var mapCard = map.querySelector('.map__card');
+    if (mapCard) {
+      mapCard.remove();
+    }
+  };
+
   window.card = {
-    render: renderCard,
+    show: showCard,
+    remove: removeCard
   };
 
 })();

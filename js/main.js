@@ -12,6 +12,9 @@
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
   var adFormAddress = adForm.querySelector('.ad-form #address');
 
+  /**
+   * Устанавливает страницу в неактивное состояние
+   */
   var deactivatePage = function () {
     map.classList.add('map--faded');
     if (map.querySelector('.map__card')) {
@@ -40,13 +43,16 @@
     });
     adFormAddress.setAttribute('readonly', 'readonly');
     adFormAddress.value = (window.map.pinMain.X_INITIAL + window.map.pinMain.OFFSET_X) + ', ' + (window.map.pinMain.Y_INITIAL + window.map.pinMain.OFFSET_Y_INITIAL);
-    window.form.capacityNumber[2].selected = true;
+    window.form.correctInitialValues();
   };
 
   deactivatePage();
 
+  /**
+   * Устанавливает страницу в активное состояние
+   */
   var activatePage = function () {
-    window.backend.load(window.similar.showPins);
+    window.backend.load(window.map.showPins, window.backend.errorHandler);
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
     adFormFieldsets.forEach(function (fieldset) {

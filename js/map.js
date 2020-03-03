@@ -20,15 +20,19 @@
     OFFSET_Y_INITIAL: 32,
   };
   var map = document.querySelector('.map');
-  var mapPins = map.querySelector('.map__pins');
   var mapPinMain = map.querySelector('.map__pin--main');
-  var mapFiltersContainer = map.querySelector('.map__filters-container');
   var adFormAddress = document.querySelector('.ad-form #address');
 
+  /**
+   * Изменение адреса в поле согласно координатам главного пина
+   */
   var adFormAddressChange = function () {
     adFormAddress.value = (parseInt(mapPinMain.style.left.slice(0, -2), 10) + PinMain.OFFSET_X) + ', ' + (parseInt(mapPinMain.style.top.slice(0, -2), 10) + PinMain.OFFSET_Y);
   };
 
+  /**
+   * Обработчик клика на главный пин
+   */
   mapPinMain.addEventListener('mousedown', function (evt) {
     if (evt.button === 0 && !window.main.isPageActivated) {
       window.main.activatePage();
@@ -86,6 +90,9 @@
     document.addEventListener('mouseup', mouseUpHandler);
   });
 
+  /**
+   * Обработчик нажатия клавиши на главный пин
+   */
   mapPinMain.addEventListener('keydown', function (evt) {
     if (evt.key === 'Enter' && !window.main.isPageActivated) {
       window.main.activatePage();
@@ -93,33 +100,19 @@
     }
   });
 
-  var mapClickHandler = function (evt) {
-    var mapCard;
-    if (evt.target.closest('.map__pin') && !evt.target.closest('.map__pin--main')) {
-      var target = evt.target.closest('.map__pin');
-      var pinsList = mapPins.querySelectorAll('.map__pin');
-      if (!target.classList.contains('map__pin--active')) {
-        Array.from(pinsList).map(function (pin) {
-          if (pin.classList.contains('map__pin--active')) {
-            pin.classList.remove('map__pin--active');
-          }
-        });
-        target.classList.add('map__pin--active');
-      }
-      var numberAd = target.dataset.number;
-      if (map.querySelector('.map__card')) {
-        mapCard = map.querySelector('.map__card');
-        map.removeChild(mapCard);
-      }
-      mapFiltersContainer.insertAdjacentElement('beforebegin', window.card.render(window.similar.ads[numberAd]));
-    }
+  /**
+   * Показывает первоначальную партию неотфильтрованных объявлений
+   * @param {Array} data - объявления, загружаемые с сервера
+   */
+  var showPins = function (data) {
+    window.pin.render(data);
+    window.filter.initialAds = data;
   };
-
-  map.addEventListener('click', mapClickHandler);
 
   window.map = {
     pin: Pin,
     pinMain: PinMain,
+    showPins: showPins,
   };
 
 })();

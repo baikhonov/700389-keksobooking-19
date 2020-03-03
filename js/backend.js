@@ -2,83 +2,115 @@
 
 (function () {
 
-  var TIMEOUT_IN_MS = 10000;
-  var URL_GET = 'https://js.dump.academy/keksobooking/data';
-  var URL_POST = 'https://js.dump.academy/keksobooking';
-  var StatusCode = {
-    OK: 200
+  var TIMEOUT = 10000;
+  var Url = {
+    GET: 'https://js.dump.academy/keksobooking/data',
+    POST: 'https://js.dump.academy/keksobooking',
   };
-  var messageSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
-  var messageErrorTemplate = document.querySelector('#error').content.querySelector('.error');
-
-  var errorHandler = function (message) {
-    var errorText = messageErrorTemplate.querySelector('p');
-    errorText.textContent = message;
-    window.form.showMessage(messageErrorTemplate);
+  var StatusCodeMap = {
+    OK: 200,
+    BAD_REQUEST: 400,
+    UNATHORIZED: 401,
+    FORBIDDEN: 403,
+    NOT_FOUND: 404,
   };
 
-  var setupXhr = function (onSuccess, showMessage) {
+  /**
+   * Обработчик ошибки при загрузке или отправке данных
+   * @param {string} errorMessage - текст ошибки
+   */
+  var errorHandler = function (errorMessage) {
+    var message = document.createElement('div');
+    message.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    message.style.position = 'absolute';
+    message.style.left = 0;
+    message.style.right = 0;
+    message.style.fontSize = '30px';
+
+    message.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', message);
+    var messageClickHandler = function () {
+      message.remove();
+    };
+    message.addEventListener('click', messageClickHandler);
+  };
+
+  /**
+   * Первоначальная настройка XMLHttpRequest
+   * @param {Function} onSuccess - функция, запускаемая в случае успеха
+   * @param {Function} onError - функция, запускаемая в случае ошибки
+   * @return {XMLHttpRequest} - настроенный запрос
+   */
+  var setupXhr = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
-    xhr.timeout = TIMEOUT_IN_MS;
+    xhr.timeout = TIMEOUT;
 
     xhr.addEventListener('load', function () {
       var error;
       switch (xhr.status) {
-        case StatusCode.OK:
+        case StatusCodeMap.OK:
           onSuccess(xhr.response);
-          if (showMessage) {
-            window.form.showMessage(messageSuccessTemplate);
-          }
           break;
-        case 400:
+        case StatusCodeMap.BAD_REQUEST:
           error = 'Неверный запрос';
           break;
-        case 401:
-          error = 'Пользователь не авторизован';
+        case StatusCodeMap.UNATHORIZED:
+          error = 'Вы не авторизованы';
           break;
-        case 403:
-          error = 'Ты не пройдёшь!';
+        case StatusCodeMap.FORBIDDEN:
+          error = 'Доступ запрещён';
           break;
-        case 404:
+        case StatusCodeMap.NOT_FOUND:
           error = 'Ничего не найдено';
           break;
         default:
-          // error = 'Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText;
-          error = 'Проблема на стороне сервера';
+          error = 'Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText;
       }
       if (error) {
-        errorHandler(error);
+        onError(error);
       }
     });
     xhr.addEventListener('error', function () {
-      errorHandler('Произошла ошибка соединения');
+      onError('Произошла ошибка соединения');
     });
     xhr.addEventListener('timeout', function () {
-      errorHandler('Запрос не успел выполниться за ' + xhr.timeout + ' мс');
+      onError('Запрос не успел выполниться за ' + xhr.timeout + ' мс');
     });
 
     return xhr;
   };
 
-  var dataDownload = function (onSuccess) {
-    var xhr = setupXhr(onSuccess, false);
+  /**
+   * Загрузка объявлений с сервера
+   * @param {*} onSuccess - функция, запускаемая в случае успеха
+   * @param {*} onError - функция, запускаемая в случае ошибки
+   */
+  var downloadAds = function (onSuccess, onError) {
+    var xhr = setupXhr(onSuccess, onError);
 
-    xhr.open('GET', URL_GET);
+    xhr.open('GET', Url.GET);
     xhr.send();
   };
 
-  var formUpload = function (data, onSuccess) {
-    var xhr = setupXhr(onSuccess, true);
+  /**
+   * Отправка данных формы на сервер
+   * @param {Object} data - данные формы
+   * @param {Function} onSuccess - функция, запускаемая в случае успеха
+   * @param {Function} onError - функция, запускаемая в случае ошибки
+   */
+  var uploadForm = function (data, onSuccess, onError) {
+    var xhr = setupXhr(onSuccess, onError);
 
-    xhr.open('POST', URL_POST);
+    xhr.open('POST', Url.POST);
     xhr.send(data);
   };
 
   window.backend = {
-    load: dataDownload,
-    save: formUpload,
+    load: downloadAds,
+    save: uploadForm,
+    errorHandler: errorHandler
   };
 
 })();

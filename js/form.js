@@ -18,9 +18,14 @@
     3: [1, 2, 3],
     100: [0],
   };
-
   var main = document.querySelector('main');
+  var messageSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
+  var messageErrorTemplate = document.querySelector('#error').content.querySelector('.error');
 
+  /**
+   * Отображает сообщение со статусом отправки
+   * @param {*} messageTemplate - шаблон сообщения
+   */
   var showMessage = function (messageTemplate) {
     var messageElement = messageTemplate.cloneNode(true);
     main.appendChild(messageElement);
@@ -40,6 +45,9 @@
     document.addEventListener('click', messageClickHandler);
   };
 
+  /**
+   * Валидатор изменения количества комнат и гостей
+   */
   var selectsRoomCapacityValidateHandler = function () {
     var rooms = parseInt(roomNumber.value, 10);
     var guests = parseInt(capacityNumber.value, 10);
@@ -56,6 +64,9 @@
   var typeOfHouse = adForm.querySelector('#type');
   var priceOfHouse = adForm.querySelector('#price');
 
+  /**
+   * Валидатор изменения минимальной цены и плейсхолдера в зависимости от типа жилья
+   */
   var selectHouseValidateHandler = function () {
     var typeOfHouseValue = typeOfHouse.value;
     priceOfHouse.setAttribute('placeholder', housesPricesValues[typeOfHouseValue]);
@@ -68,6 +79,10 @@
   var timeInSelect = adForm.querySelector('#timein');
   var timeOutSelect = adForm.querySelector('#timeout');
 
+  /**
+   * Валидатор изменения времени заезда/выезда
+   * @param {*} evt - событие
+   */
   var selectTimeValidateHandler = function (evt) {
     if (evt.target.matches('#timein')) {
       timeOutSelect.selectedIndex = timeInSelect.selectedIndex;
@@ -79,15 +94,41 @@
   timeInSelect.addEventListener('change', selectTimeValidateHandler);
   timeOutSelect.addEventListener('change', selectTimeValidateHandler);
 
+  /**
+   * Установка корректных значений полей при загрузке страницы
+   */
+  var correctInitialValues = function () {
+    capacityNumber[2].selected = true;
+    priceOfHouse.setAttribute('placeholder', housesPricesValues[typeOfHouse.value]);
+    priceOfHouse.setAttribute('min', housesPricesValues[typeOfHouse.value]);
+  };
+
+  /**
+   * Действия при успешной отправке формы
+   */
+  var formSubmitSuccess = function () {
+    adForm.reset();
+    window.main.deactivatePage();
+    window.main.isPageActivated = false;
+    showMessage(messageSuccessTemplate);
+  };
+
+  /**
+   * Действия в случае неуспешной отправки формы
+   */
+  var formSubmitError = function () {
+    showMessage(messageErrorTemplate);
+  };
+
   adForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(adForm), function () {
-      adForm.reset();
-      window.main.deactivatePage();
-      window.main.isPageActivated = false;
-    });
+    window.backend.save(new FormData(adForm), formSubmitSuccess, formSubmitError);
   });
 
+  /**
+   * Обработчик сброса данных формы
+   * @param {*} evt - событие
+   */
   var resetButtonClickHandler = function (evt) {
     evt.preventDefault();
     window.main.deactivatePage();
@@ -97,8 +138,7 @@
   adFormResetButton.addEventListener('click', resetButtonClickHandler);
 
   window.form = {
-    capacityNumber: capacityNumber,
-    showMessage: showMessage,
+    correctInitialValues: correctInitialValues,
   };
 
 })();
