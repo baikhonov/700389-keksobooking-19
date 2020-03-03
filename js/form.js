@@ -7,7 +7,6 @@
   var adForm = document.querySelector('.ad-form');
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
   var adFormAddress = adForm.querySelector('.ad-form #address');
-  var adFormFeatures = adForm.querySelectorAll('.feature__checkbox');
   var adFormResetButton = adForm.querySelector('.ad-form__reset');
   var roomNumber = adForm.querySelector('#room_number');
   var capacityNumber = adForm.querySelector('#capacity');
@@ -25,7 +24,7 @@
   };
   var fileAvatarChooser = adForm.querySelector('#avatar');
   var avatarPreview = adForm.querySelector('.ad-form-header__preview img');
-  var fileHouseChooser = adForm.querySelector('#images');
+  var fileHousePhotoChooser = adForm.querySelector('#images');
   var housePhotoPreview = adForm.querySelector('.ad-form__photo');
 
   var main = document.querySelector('main');
@@ -60,7 +59,7 @@
 
   fileAvatarChooser.addEventListener('change', fileAvatarChooserChangeHandler);
 
-  var fileHouseChooserChangeHandler = function (evt) {
+  var fileHousePhotoChooserChangeHandler = function (evt) {
     var file = evt.target.files[0];
 
     if (checkFileType(file)) {
@@ -78,10 +77,10 @@
 
     }
 
-    // evt.target.removeEventListener('change', fileHouseChooserChangeHandler);
+    // evt.target.removeEventListener('change', fileHousePhotoChooserChangeHandler);
   };
 
-  fileHouseChooser.addEventListener('change', fileHouseChooserChangeHandler);
+  fileHousePhotoChooser.addEventListener('change', fileHousePhotoChooserChangeHandler);
 
   /**
    * Отображает сообщение со статусом отправки
@@ -197,9 +196,6 @@
     });
     adFormAddress.setAttribute('readonly', 'readonly');
     adFormAddress.value = (window.map.pinMain.X_INITIAL + window.map.pinMain.OFFSET_X) + ', ' + (window.map.pinMain.Y_INITIAL + window.map.pinMain.OFFSET_Y_INITIAL);
-    adFormFeatures.forEach(function (feature) {
-      feature.checked = false;
-    });
     housePhotoPreview.textContent = '';
     avatarPreview.src = INITIAL_AVATAR_SRC;
     correctInitialValues();
