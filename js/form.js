@@ -2,7 +2,12 @@
 
 (function () {
 
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var INITIAL_AVATAR_SRC = 'img/muffin-grey.svg';
   var adForm = document.querySelector('.ad-form');
+  var adFormFieldsets = adForm.querySelectorAll('fieldset');
+  var adFormAddress = adForm.querySelector('.ad-form #address');
+  var adFormFeatures = adForm.querySelectorAll('.feature__checkbox');
   var adFormResetButton = adForm.querySelector('.ad-form__reset');
   var roomNumber = adForm.querySelector('#room_number');
   var capacityNumber = adForm.querySelector('#capacity');
@@ -18,9 +23,65 @@
     3: [1, 2, 3],
     100: [0],
   };
+  var fileAvatarChooser = adForm.querySelector('#avatar');
+  var avatarPreview = adForm.querySelector('.ad-form-header__preview img');
+  var fileHouseChooser = adForm.querySelector('#images');
+  var housePhotoPreview = adForm.querySelector('.ad-form__photo');
+
   var main = document.querySelector('main');
   var messageSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
   var messageErrorTemplate = document.querySelector('#error').content.querySelector('.error');
+
+  var checkFileType = function (file) {
+    var fileName = file.name.toLowerCase();
+
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+
+    return matches;
+  };
+
+  var fileAvatarChooserChangeHandler = function (evt) {
+    var file = evt.target.files[0];
+
+    if (checkFileType(file)) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        avatarPreview.src = reader.result;
+      });
+      reader.readAsDataURL(file);
+
+    }
+
+    // evt.target.removeEventListener('change', fileAvatarChooserChangeHandler);
+  };
+
+  fileAvatarChooser.addEventListener('change', fileAvatarChooserChangeHandler);
+
+  var fileHouseChooserChangeHandler = function (evt) {
+    var file = evt.target.files[0];
+
+    if (checkFileType(file)) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        var houseImage = document.createElement('img');
+        houseImage.style = 'max-width: 100%; height: auto; max-height: 230px';
+        houseImage.src = reader.result;
+        housePhotoPreview.style = 'width: 150px';
+        housePhotoPreview.textContent = '';
+        housePhotoPreview.appendChild(houseImage);
+      });
+      reader.readAsDataURL(file);
+
+    }
+
+    // evt.target.removeEventListener('change', fileHouseChooserChangeHandler);
+  };
+
+  fileHouseChooser.addEventListener('change', fileHouseChooserChangeHandler);
 
   /**
    * Отображает сообщение со статусом отправки
@@ -126,6 +187,37 @@
   });
 
   /**
+   * Деактивация формы
+   */
+  var deactivateAdForm = function () {
+    adForm.reset();
+    adForm.classList.add('ad-form--disabled');
+    adFormFieldsets.forEach(function (fieldset) {
+      fieldset.setAttribute('disabled', 'disabled');
+    });
+    adFormAddress.setAttribute('readonly', 'readonly');
+    adFormAddress.value = (window.map.pinMain.X_INITIAL + window.map.pinMain.OFFSET_X) + ', ' + (window.map.pinMain.Y_INITIAL + window.map.pinMain.OFFSET_Y_INITIAL);
+    adFormFeatures.forEach(function (feature) {
+      feature.checked = false;
+    });
+    housePhotoPreview.textContent = '';
+    avatarPreview.src = INITIAL_AVATAR_SRC;
+    correctInitialValues();
+  };
+
+  /**
+   * Активация формы
+   */
+  var activateAdForm = function () {
+    adForm.classList.remove('ad-form--disabled');
+    adFormFieldsets.forEach(function (fieldset) {
+      fieldset.removeAttribute('disabled');
+    });
+    adFormAddress.value = (window.map.pinMain.X_INITIAL + window.map.pinMain.OFFSET_X) + ', ' + (window.map.pinMain.Y_INITIAL + window.map.pinMain.OFFSET_Y);
+    correctInitialValues();
+  };
+
+  /**
    * Обработчик сброса данных формы
    * @param {*} evt - событие
    */
@@ -138,7 +230,8 @@
   adFormResetButton.addEventListener('click', resetButtonClickHandler);
 
   window.form = {
-    correctInitialValues: correctInitialValues,
+    deactivate: deactivateAdForm,
+    activate: activateAdForm,
   };
 
 })();
