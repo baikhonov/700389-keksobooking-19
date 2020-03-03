@@ -14,13 +14,28 @@
    * @param {integer} pinNumber - номер метки
    * @return {*} шаблон метки с заполненными данными
    */
-  var renderPin = function (mapPin, pinNumber) {
+  var renderPin = function (mapPin) {
     var mapPinElement = mapPinTemplate.cloneNode(true);
     mapPinElement.classList.add('map__pin--secondary');
     mapPinElement.querySelector('img').src = mapPin.author.avatar;
     mapPinElement.querySelector('img').alt = mapPin.offer.title;
     mapPinElement.style = 'left: ' + (mapPin.location.x - window.map.pin.OFFSET_X) + 'px; top: ' + (mapPin.location.y - window.map.pin.OFFSET_Y) + 'px;';
-    mapPinElement.dataset.number = pinNumber;
+
+    mapPinElement.addEventListener('mousedown', mapPinElementMousedown);
+    function mapPinElementMousedown(evt) {
+      if (evt.button === 0 && !mapPinElement.classList.contains('map__pin--active')) {
+        window.card.show(mapPin);
+        mapPinElement.classList.add('map__pin--active');
+      }
+    }
+
+    mapPinElement.addEventListener('keydown', mapPinElementKeydown);
+    function mapPinElementKeydown(evt) {
+      if (evt.key === 'Enter' && !mapPinElement.classList.contains('map__pin--active')) {
+        window.card.show(mapPin);
+        mapPinElement.classList.add('map__pin--active');
+      }
+    }
 
     return mapPinElement;
   };
@@ -30,10 +45,17 @@
       ads = ads.slice(0, MAX_PINS_COUNT);
     }
     var fragment = document.createDocumentFragment();
-    ads.forEach(function (ad, index) {
-      fragment.appendChild(renderPin(ad, index));
+    ads.forEach(function (ad) {
+      fragment.appendChild(renderPin(ad));
     });
     mapPins.appendChild(fragment);
+  };
+
+  var removeActiveClass = function () {
+    var activePin = document.querySelector('.map__pin--active');
+    if (activePin) {
+      activePin.classList.remove('map__pin--active');
+    }
   };
 
   var removePins = function () {
@@ -45,6 +67,7 @@
 
   window.pin = {
     render: renderPins,
+    removeActiveClass: removeActiveClass,
     removeAll: removePins,
   };
 

@@ -29,7 +29,7 @@
   * @param {*} card - шаблон карточки, который будет заполняться данными
   * @return {*} возвращает шаблон карточки с заполненными данными
   */
-  var renderCard = function (card) {
+  var prepareCard = function (card) {
     var cardElement = cardTemplate.cloneNode(true);
     cardElement.querySelector('.popup__avatar').src = card.author.avatar;
     cardElement.querySelector('.popup__title').textContent = card.offer.title;
@@ -73,24 +73,24 @@
     var cardElementClose = cardElement.querySelector('.popup__close');
     cardElementClose.addEventListener('click', function () {
       cardElement.remove();
-      var activePin = map.querySelector('.map__pin--active');
-      if (activePin) {
-        activePin.classList.remove('map__pin--active');
-      }
+      window.pin.removeActiveClass();
     });
     var mapKeydownHandler = function (evt) {
       if (map.querySelector('.map__card') && evt.key === 'Escape') {
         cardElement.remove();
-        var activePin = map.querySelector('.map__pin--active');
-        if (activePin) {
-          activePin.classList.remove('map__pin--active');
-        }
+        window.pin.removeActiveClass();
         document.removeEventListener('keydown', mapKeydownHandler);
       }
     };
     document.addEventListener('keydown', mapKeydownHandler);
 
     return cardElement;
+  };
+
+  var showCard = function (card) {
+    removeCard();
+    window.pin.removeActiveClass();
+    map.querySelector('.map__filters-container').insertAdjacentElement('beforebegin', prepareCard(card));
   };
 
   var removeCard = function () {
@@ -101,7 +101,7 @@
   };
 
   window.card = {
-    render: renderCard,
+    show: showCard,
     remove: removeCard
   };
 

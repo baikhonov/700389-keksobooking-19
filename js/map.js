@@ -21,7 +21,6 @@
   };
   var map = document.querySelector('.map');
   var mapPinMain = map.querySelector('.map__pin--main');
-  var mapFiltersContainer = map.querySelector('.map__filters-container');
   var adFormAddress = document.querySelector('.ad-form #address');
 
   var adFormAddressChange = function () {
@@ -95,28 +94,7 @@
   var showPins = function (data) {
     window.pin.render(data);
     window.filter.initialAds = data;
-    window.filter.filteredAds = data;
   };
-
-  var mapClickHandler = function (evt) {
-
-    if (evt.target.closest('.map__pin--secondary')) {
-      var target = evt.target.closest('.map__pin--secondary');
-      if (!target.classList.contains('map__pin--active')) {
-        var activePin = map.querySelector('.map__pin--active');
-        if (activePin) {
-          activePin.classList.remove('map__pin--active');
-        }
-        target.classList.add('map__pin--active');
-        var numberAd = target.dataset.number;
-        window.card.remove();
-        mapFiltersContainer.insertAdjacentElement('beforebegin', window.card.render(window.filter.filteredAds[numberAd]));
-      }
-
-    }
-  };
-
-  map.addEventListener('click', mapClickHandler);
 
   window.map = {
     pin: Pin,
