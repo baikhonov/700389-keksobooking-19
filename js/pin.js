@@ -40,6 +40,10 @@
     return mapPinElement;
   };
 
+  /**
+   * Прорисовывает метки на карте
+   * @param {*} ads - массив объявлений
+   */
   var renderPins = function (ads) {
     if (ads.length > MAX_PINS_COUNT) {
       ads = ads.slice(0, MAX_PINS_COUNT);
@@ -51,6 +55,9 @@
     mapPins.appendChild(fragment);
   };
 
+  /**
+   * Удаляет класс активности у меток
+   */
   var removeActiveClass = function () {
     var activePin = document.querySelector('.map__pin--active');
     if (activePin) {
@@ -58,6 +65,10 @@
     }
   };
 
+
+  /**
+   * Зачищает метки на карте
+   */
   var removePins = function () {
     var pinsList = document.querySelectorAll('.map__pin--secondary');
     Array.from(pinsList).map(function (pin) {

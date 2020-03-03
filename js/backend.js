@@ -7,7 +7,7 @@
     GET: 'https://js.dump.academy/keksobooking/data',
     POST: 'https://js.dump.academy/keksobooking',
   };
-  var StatusCode = {
+  var StatusCodeMap = {
     OK: 200,
     BAD_REQUEST: 400,
     UNATHORIZED: 401,
@@ -15,6 +15,10 @@
     NOT_FOUND: 404,
   };
 
+  /**
+   * Обработчик ошибки при загрузке или отправке данных
+   * @param {string} errorMessage - текст ошибки
+   */
   var errorHandler = function (errorMessage) {
     var message = document.createElement('div');
     message.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
@@ -25,8 +29,18 @@
 
     message.textContent = errorMessage;
     document.body.insertAdjacentElement('afterbegin', message);
+    var messageClickHandler = function () {
+      message.remove();
+    };
+    message.addEventListener('click', messageClickHandler);
   };
 
+  /**
+   * Первоначальная настройка XMLHttpRequest
+   * @param {Function} onSuccess - функция, запускаемая в случае успеха
+   * @param {Function} onError - функция, запускаемая в случае ошибки
+   * @return {XMLHttpRequest} - настроенный запрос
+   */
   var setupXhr = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
 
@@ -36,19 +50,19 @@
     xhr.addEventListener('load', function () {
       var error;
       switch (xhr.status) {
-        case StatusCode.OK:
+        case StatusCodeMap.OK:
           onSuccess(xhr.response);
           break;
-        case StatusCode.BAD_REQUEST:
+        case StatusCodeMap.BAD_REQUEST:
           error = 'Неверный запрос';
           break;
-        case StatusCode.UNATHORIZED:
+        case StatusCodeMap.UNATHORIZED:
           error = 'Вы не авторизованы';
           break;
-        case StatusCode.FORBIDDEN:
+        case StatusCodeMap.FORBIDDEN:
           error = 'Доступ запрещён';
           break;
-        case StatusCode.NOT_FOUND:
+        case StatusCodeMap.NOT_FOUND:
           error = 'Ничего не найдено';
           break;
         default:
@@ -68,6 +82,11 @@
     return xhr;
   };
 
+  /**
+   * Загрузка объявлений с сервера
+   * @param {*} onSuccess - функция, запускаемая в случае успеха
+   * @param {*} onError - функция, запускаемая в случае ошибки
+   */
   var downloadAds = function (onSuccess, onError) {
     var xhr = setupXhr(onSuccess, onError);
 
@@ -75,6 +94,12 @@
     xhr.send();
   };
 
+  /**
+   * Отправка данных формы на сервер
+   * @param {Object} data - данные формы
+   * @param {Function} onSuccess - функция, запускаемая в случае успеха
+   * @param {Function} onError - функция, запускаемая в случае ошибки
+   */
   var uploadForm = function (data, onSuccess, onError) {
     var xhr = setupXhr(onSuccess, onError);
 

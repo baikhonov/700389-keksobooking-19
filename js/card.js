@@ -87,12 +87,19 @@
     return cardElement;
   };
 
+  /**
+   * Отображает карточку на карте
+   * @param {Object} card - данные карточки
+   */
   var showCard = function (card) {
     removeCard();
     window.pin.removeActiveClass();
     map.querySelector('.map__filters-container').insertAdjacentElement('beforebegin', prepareCard(card));
   };
 
+  /**
+   * Удаляет карточку на карте
+   */
   var removeCard = function () {
     var mapCard = map.querySelector('.map__card');
     if (mapCard) {

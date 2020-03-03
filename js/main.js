@@ -12,6 +12,9 @@
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
   var adFormAddress = adForm.querySelector('.ad-form #address');
 
+  /**
+   * Устанавливает страницу в неактивное состояние
+   */
   var deactivatePage = function () {
     map.classList.add('map--faded');
     if (map.querySelector('.map__card')) {
@@ -45,6 +48,9 @@
 
   deactivatePage();
 
+  /**
+   * Устанавливает страницу в активное состояние
+   */
   var activatePage = function () {
     window.backend.load(window.map.showPins, window.backend.errorHandler);
     map.classList.remove('map--faded');
