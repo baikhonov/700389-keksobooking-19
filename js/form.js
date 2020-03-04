@@ -198,7 +198,6 @@
     adFormAddress.value = (window.map.pinMain.X_INITIAL + window.map.pinMain.OFFSET_X) + ', ' + (window.map.pinMain.Y_INITIAL + window.map.pinMain.OFFSET_Y_INITIAL);
     housePhotoPreview.textContent = '';
     avatarPreview.src = INITIAL_AVATAR_SRC;
-    correctInitialValues();
   };
 
   /**
