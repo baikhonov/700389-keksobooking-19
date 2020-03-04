@@ -6,6 +6,7 @@
   var INITIAL_AVATAR_SRC = 'img/muffin-grey.svg';
   var adForm = document.querySelector('.ad-form');
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
+  // оставить только ID
   var adFormAddress = adForm.querySelector('.ad-form #address');
   var adFormResetButton = adForm.querySelector('.ad-form__reset');
   var roomNumber = adForm.querySelector('#room_number');

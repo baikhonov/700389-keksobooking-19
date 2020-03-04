@@ -75,6 +75,7 @@
    */
   var removePins = function () {
     var pinsList = document.querySelectorAll('.map__pin--secondary');
+    // переписать на forEach
     Array.from(pinsList).map(function (pin) {
       pin.remove();
     });
