@@ -4,24 +4,24 @@
 
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var INITIAL_AVATAR_SRC = 'img/muffin-grey.svg';
-  var adForm = document.querySelector('.ad-form');
-  var adFormFieldsets = adForm.querySelectorAll('fieldset');
-  var adFormAddress = adForm.querySelector('.ad-form #address');
-  var adFormResetButton = adForm.querySelector('.ad-form__reset');
-  var roomNumber = adForm.querySelector('#room_number');
-  var capacityNumber = adForm.querySelector('#capacity');
-  var housesPricesValues = {
+  var housesPricesDictionary = {
     'bungalo': 0,
     'flat': 1000,
     'house': 5000,
     'palace': 10000
   };
-  var roomCapacityValues = {
+  var roomCapacityDictionary = {
     1: [1],
     2: [1, 2],
     3: [1, 2, 3],
     100: [0],
   };
+  var adForm = document.querySelector('.ad-form');
+  var adFormFieldsets = adForm.querySelectorAll('fieldset');
+  var adFormAddress = adForm.querySelector('#address');
+  var adFormResetButton = adForm.querySelector('.ad-form__reset');
+  var roomNumber = adForm.querySelector('#room_number');
+  var capacityNumber = adForm.querySelector('#capacity');
   var fileAvatarChooser = adForm.querySelector('#avatar');
   var avatarPreview = adForm.querySelector('.ad-form-header__preview img');
   var fileHousePhotoChooser = adForm.querySelector('#images');
@@ -53,8 +53,6 @@
       reader.readAsDataURL(file);
 
     }
-
-    // evt.target.removeEventListener('change', fileAvatarChooserChangeHandler);
   };
 
   fileAvatarChooser.addEventListener('change', fileAvatarChooserChangeHandler);
@@ -76,8 +74,6 @@
       reader.readAsDataURL(file);
 
     }
-
-    // evt.target.removeEventListener('change', fileHousePhotoChooserChangeHandler);
   };
 
   fileHousePhotoChooser.addEventListener('change', fileHousePhotoChooserChangeHandler);
@@ -111,7 +107,7 @@
   var selectsRoomCapacityValidateHandler = function () {
     var rooms = parseInt(roomNumber.value, 10);
     var guests = parseInt(capacityNumber.value, 10);
-    if (roomCapacityValues[rooms].indexOf(guests) === -1) {
+    if (roomCapacityDictionary[rooms].indexOf(guests) === -1) {
       capacityNumber.setCustomValidity('Количество гостей не соответствует количеству комнат');
     } else {
       capacityNumber.setCustomValidity('');
@@ -129,8 +125,8 @@
    */
   var selectHouseValidateHandler = function () {
     var typeOfHouseValue = typeOfHouse.value;
-    priceOfHouse.setAttribute('placeholder', housesPricesValues[typeOfHouseValue]);
-    priceOfHouse.setAttribute('min', housesPricesValues[typeOfHouseValue]);
+    priceOfHouse.setAttribute('placeholder', housesPricesDictionary[typeOfHouseValue]);
+    priceOfHouse.setAttribute('min', housesPricesDictionary[typeOfHouseValue]);
   };
 
   typeOfHouse.addEventListener('change', selectHouseValidateHandler);
@@ -159,8 +155,8 @@
    */
   var correctInitialValues = function () {
     capacityNumber[2].selected = true;
-    priceOfHouse.setAttribute('placeholder', housesPricesValues[typeOfHouse.value]);
-    priceOfHouse.setAttribute('min', housesPricesValues[typeOfHouse.value]);
+    priceOfHouse.setAttribute('placeholder', housesPricesDictionary[typeOfHouse.value]);
+    priceOfHouse.setAttribute('min', housesPricesDictionary[typeOfHouse.value]);
   };
 
   /**
@@ -194,7 +190,7 @@
     adFormFieldsets.forEach(function (fieldset) {
       fieldset.setAttribute('disabled', 'disabled');
     });
-    adFormAddress.setAttribute('readonly', 'readonly');
+    adFormAddress.readOnly = true;
     adFormAddress.value = (window.map.pinMain.X_INITIAL + window.map.pinMain.OFFSET_X) + ', ' + (window.map.pinMain.Y_INITIAL + window.map.pinMain.OFFSET_Y_INITIAL);
     housePhotoPreview.textContent = '';
     avatarPreview.src = INITIAL_AVATAR_SRC;

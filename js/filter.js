@@ -2,6 +2,7 @@
 
 (function () {
 
+  var initialAds = [];
   var filteredAds = [];
   var filterForm = document.querySelector('.map__filters');
 
@@ -10,10 +11,10 @@
 
   var filterHousePrice = filterForm.querySelector('#housing-price');
   var housePriceValue = filterHousePrice.value;
-  var priceMap = {
-    low: [0, 9999],
-    middle: [10000, 49999],
-    high: [50000, Infinity]
+  var housePriceDictionary = {
+    'low': [0, 9999],
+    'middle': [10000, 49999],
+    'high': [50000, Infinity]
   };
 
   var filterHouseRooms = filterForm.querySelector('#housing-rooms');
@@ -28,59 +29,55 @@
   });
 
   /**
-   * Фильтрует объявления по типу жилья
+   * Формирует условие для фильтрации по типу жилья
    * @param {Object} ad - проверяемое объявление
    * @return {boolean} - условие для фильтрации
    */
   var filterHouseTypeChange = function (ad) {
     if (houseTypeValue === 'any') {
       return true;
-    } else {
-      return ad.offer.type === houseTypeValue;
     }
+    return ad.offer.type === houseTypeValue;
   };
 
   /**
-   * Фильтрует объявления по цене жилья
+   * Формирует условие для фильтрации по цене жилья
    * @param {Object} ad - проверяемое объявление
    * @return {boolean} - условие для фильтрации
    */
   var filterHousePriceChange = function (ad) {
     if (housePriceValue === 'any') {
       return true;
-    } else {
-      return ad.offer.price >= priceMap[housePriceValue][0] && ad.offer.price <= priceMap[housePriceValue][1];
     }
+    return ad.offer.price >= housePriceDictionary[housePriceValue][0] && ad.offer.price <= housePriceDictionary[housePriceValue][1];
   };
 
   /**
-   * Фильтрует объявления по количеству комнат
+   * Формирует условие для фильтрации по количеству комнат
    * @param {Object} ad - проверяемое объявление
    * @return {boolean} - условие для фильтрации
    */
   var filterHouseRoomChange = function (ad) {
     if (houseRoomValue === 'any') {
       return true;
-    } else {
-      return ad.offer.rooms === parseInt(houseRoomValue, 10);
     }
+    return ad.offer.rooms === parseInt(houseRoomValue, 10);
   };
 
   /**
-   * Фильтрует объявления по количеству гостей
+   * Формирует условие для фильтрации по количеству гостей
    * @param {Object} ad - проверяемое объявление
    * @return {boolean} - условие для фильтрации
    */
   var filterHouseGuestsChange = function (ad) {
     if (houseGuestsValue === 'any') {
       return true;
-    } else {
-      return ad.offer.guests === parseInt(houseGuestsValue, 10);
     }
+    return ad.offer.guests === parseInt(houseGuestsValue, 10);
   };
 
   /**
-   * Фильтрует объявления по набору фич
+   * Формирует условие для фильтрации по набору фич
    * @param {Object} ad - проверяемое объявление
    * @return {boolean} - условие для фильтрации
    */
@@ -97,23 +94,18 @@
     filteredAds = window.filter.initialAds;
     switch (evt.target.id) {
       case filterHouseType.id:
-        // фильтрация по типу жилья
         houseTypeValue = evt.target.value;
         break;
       case filterHousePrice.id:
-        // фильтрация по цене жилья
         housePriceValue = evt.target.value;
         break;
       case filterHouseRooms.id:
-        // фильтрация по количеству комнат
         houseRoomValue = evt.target.value;
         break;
       case filterHouseGuests.id:
-        // фильтрация по количеству гостей
         houseGuestsValue = evt.target.value;
         break;
       case 'filter-' + evt.target.value:
-        // фильтрация по фичам
         HouseFeaturesValue = Array.from(filterHouseFeatures.querySelectorAll('input:checked')).map(function (ad) {
           return ad.value;
         });
@@ -140,7 +132,7 @@
   };
 
   window.filter = {
-    initialAds: [],
+    initialAds: initialAds,
   };
 
 })();

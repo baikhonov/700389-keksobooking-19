@@ -7,7 +7,7 @@
     GET: 'https://js.dump.academy/keksobooking/data',
     POST: 'https://js.dump.academy/keksobooking',
   };
-  var StatusCodeMap = {
+  var StatusCode = {
     OK: 200,
     BAD_REQUEST: 400,
     UNATHORIZED: 401,
@@ -50,19 +50,19 @@
     xhr.addEventListener('load', function () {
       var error;
       switch (xhr.status) {
-        case StatusCodeMap.OK:
+        case StatusCode.OK:
           onSuccess(xhr.response);
           break;
-        case StatusCodeMap.BAD_REQUEST:
+        case StatusCode.BAD_REQUEST:
           error = 'Неверный запрос';
           break;
-        case StatusCodeMap.UNATHORIZED:
+        case StatusCode.UNATHORIZED:
           error = 'Вы не авторизованы';
           break;
-        case StatusCodeMap.FORBIDDEN:
+        case StatusCode.FORBIDDEN:
           error = 'Доступ запрещён';
           break;
-        case StatusCodeMap.NOT_FOUND:
+        case StatusCode.NOT_FOUND:
           error = 'Ничего не найдено';
           break;
         default:

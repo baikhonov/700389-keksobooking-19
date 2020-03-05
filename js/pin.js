@@ -54,7 +54,9 @@
     }
     var fragment = document.createDocumentFragment();
     ads.forEach(function (ad) {
-      fragment.appendChild(renderPin(ad));
+      if (ad.offer) {
+        fragment.appendChild(renderPin(ad));
+      }
     });
     mapPins.appendChild(fragment);
   };
@@ -75,7 +77,7 @@
    */
   var removePins = function () {
     var pinsList = document.querySelectorAll('.map__pin--secondary');
-    Array.from(pinsList).map(function (pin) {
+    pinsList.forEach(function (pin) {
       pin.remove();
     });
   };
