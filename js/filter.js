@@ -28,21 +28,13 @@
     return ad.value;
   });
 
-  var checkFilterValue = function (value) {
-    if (value === 'any') {
-      return true;
-    }
-  };
-
   /**
    * Формирует условие для фильтрации по типу жилья
    * @param {Object} ad - проверяемое объявление
    * @return {boolean} - условие для фильтрации
    */
   var filterHouseTypeChange = function (ad) {
-    if (!checkFilterValue(houseTypeValue)) {
-      return ad.offer.type === houseTypeValue;
-    }
+    return (houseTypeValue === 'any') ? true : ad.offer.type === houseTypeValue;
   };
 
   /**
@@ -51,10 +43,9 @@
    * @return {boolean} - условие для фильтрации
    */
   var filterHousePriceChange = function (ad) {
-    if (housePriceValue === 'any') {
-      return true;
-    }
-    return ad.offer.price >= housePriceDictionary[housePriceValue][0] && ad.offer.price <= housePriceDictionary[housePriceValue][1];
+    return (housePriceValue === 'any') ? true :
+      ad.offer.price >= housePriceDictionary[housePriceValue][0] &&
+      ad.offer.price <= housePriceDictionary[housePriceValue][1];
   };
 
   /**
@@ -63,10 +54,7 @@
    * @return {boolean} - условие для фильтрации
    */
   var filterHouseRoomChange = function (ad) {
-    if (houseRoomValue === 'any') {
-      return true;
-    }
-    return ad.offer.rooms === parseInt(houseRoomValue, 10);
+    return (houseRoomValue === 'any') ? true : ad.offer.rooms === parseInt(houseRoomValue, 10);
   };
 
   /**
