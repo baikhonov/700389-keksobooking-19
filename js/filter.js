@@ -63,10 +63,7 @@
    * @return {boolean} - условие для фильтрации
    */
   var filterHouseGuestsChange = function (ad) {
-    if (houseGuestsValue === 'any') {
-      return true;
-    }
-    return ad.offer.guests === parseInt(houseGuestsValue, 10);
+    return (houseGuestsValue === 'any') ? true : ad.offer.guests === parseInt(houseGuestsValue, 10);
   };
 
   /**
