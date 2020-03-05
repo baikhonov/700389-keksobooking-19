@@ -28,16 +28,21 @@
     return ad.value;
   });
 
+  var checkFilterValue = function (value) {
+    if (value === 'any') {
+      return true;
+    }
+  };
+
   /**
    * Формирует условие для фильтрации по типу жилья
    * @param {Object} ad - проверяемое объявление
    * @return {boolean} - условие для фильтрации
    */
   var filterHouseTypeChange = function (ad) {
-    if (houseTypeValue === 'any') {
-      return true;
+    if (!checkFilterValue(houseTypeValue)) {
+      return ad.offer.type === houseTypeValue;
     }
-    return ad.offer.type === houseTypeValue;
   };
 
   /**
