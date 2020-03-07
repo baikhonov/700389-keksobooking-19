@@ -36,7 +36,7 @@
     cardElement.querySelector('.popup__text--address').textContent = card.offer.address;
     cardElement.querySelector('.popup__text--price span').textContent = card.offer.price;
     cardElement.querySelector('.popup__type').textContent = typesOfHouseDictionary[card.offer.type];
-    cardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' ' + window.util.getPluralForm(ROOM_FORMS, card.offer.rooms) + ' для ' + card.offer.guests + ' ' + window.util.getPluralForm(GUEST_FORMS, card.offer.guests);
+    cardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
     cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
     // получаем список фич в разметке, готовим шаблон фичи, зачищаем список
     var popupFeatures = cardElement.querySelector('.popup__features');
