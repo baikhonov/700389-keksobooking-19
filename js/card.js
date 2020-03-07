@@ -2,16 +2,6 @@
 
 (function () {
 
-  var ROOM_FORMS = [
-    'комната',
-    'комнаты',
-    'комнат',
-  ];
-  var GUEST_FORMS = [
-    'гостя',
-    'гостей',
-    'гостей',
-  ];
   var typesOfHouseDictionary = {
     'palace': 'Дворец',
     'flat': 'Квартира',
