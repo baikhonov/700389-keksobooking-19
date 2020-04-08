@@ -108,7 +108,7 @@
     var rooms = parseInt(roomNumber.value, 10);
     var guests = parseInt(capacityNumber.value, 10);
     if (roomCapacityDictionary[rooms].indexOf(guests) === -1) {
-      capacityNumber.setCustomValidity('Количество гостей не соответствует количеству комнат');
+      capacityNumber.setCustomValidity('Количество гостей не соответствует количеству комнат!');
     } else {
       capacityNumber.setCustomValidity('');
     }
