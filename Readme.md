@@ -1,4 +1,4 @@
 # Личный проект «Кексобукинг»
 
-[Demo](https://baikhonov.github.io/700389-keksobooking-19/)
+[Demo](https://baikhonov.github.io/keksobooking/)
 
